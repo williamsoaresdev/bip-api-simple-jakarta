@@ -2,30 +2,18 @@ package com.bip.application.dtos;
 
 import java.math.BigDecimal;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 /**
  * Classe base para DTOs de criação e atualização de benefícios.
  * Elimina a duplicação de código entre AtualizarBeneficioDto e CriarBeneficioDto.
+ * As validações são definidas nas classes filhas para permitir diferentes regras.
  * 
  * @author BIP API Team
  * @since 1.0
  */
 public abstract class BaseDto {
     
-    @NotBlank(message = "Nome é obrigatório")
-    @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
     protected String nome;
-    
-    @NotBlank(message = "Descrição é obrigatória")
-    @Size(max = 500, message = "Descrição não pode exceder 500 caracteres")
     protected String descricao;
-    
-    @NotNull(message = "Valor inicial é obrigatório")
-    @DecimalMin(value = "0.00", inclusive = true, message = "Valor inicial deve ser positivo ou zero")
     protected BigDecimal valorInicial;
     
     /**

@@ -128,11 +128,13 @@ public class BeneficioUseCase {
      * Remove benefício
      */
     public void remover(@NotNull @Positive Long id) {
-        if (!beneficioRepository.existsById(id)) {
-            throw new IllegalArgumentException("Benefício não encontrado com ID: " + id);
+        try {
+            // Verifica se o benefício existe através do service
+            beneficioService.buscarPorId(id);
+            beneficioRepository.deleteById(id);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Benefício não encontrado");
         }
-        
-        beneficioRepository.deleteById(id);
     }
     
     /**

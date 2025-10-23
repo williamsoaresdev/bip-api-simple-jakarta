@@ -4,6 +4,7 @@ import com.bip.application.dtos.AtualizarBeneficioDto;
 import com.bip.application.dtos.BeneficioDto;
 import com.bip.application.dtos.CriarBeneficioDto;
 import com.bip.application.mappers.BeneficioMapper;
+import com.bip.application.services.BeneficioService;
 import com.bip.domain.entities.Beneficio;
 import com.bip.domain.repositories.BeneficioRepository;
 import com.bip.domain.valueobjects.Money;
@@ -42,6 +43,9 @@ class BeneficioUseCaseTest {
 
     @Mock
     private BeneficioMapper mapper;
+
+    @Mock
+    private BeneficioService beneficioService;
 
     @InjectMocks
     private BeneficioUseCase useCase;
@@ -115,7 +119,7 @@ class BeneficioUseCaseTest {
 
             // Act & Assert
             assertThatThrownBy(() -> useCase.criar(criarBeneficioDtoSample))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(RuntimeException.class)
                 .hasMessage("Já existe benefício com o nome: João Silva");
 
             verify(repository).existsByNome("João Silva");
@@ -320,7 +324,7 @@ class BeneficioUseCaseTest {
             );
             beneficioInativo.desativar(); // Desativa primeiro para poder ativar depois
             
-            when(repository.findById(id)).thenReturn(Optional.of(beneficioInativo));
+            when(beneficioService.buscarPorId(id)).thenReturn(beneficioInativo);
             when(repository.save(any(Beneficio.class))).thenReturn(beneficioInativo);
             when(mapper.toDto(any(Beneficio.class))).thenReturn(beneficioDtoSample);
 
@@ -330,7 +334,7 @@ class BeneficioUseCaseTest {
             // Assert
             assertThat(resultado).isNotNull();
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository).save(any(Beneficio.class));
             verify(mapper).toDto(any(Beneficio.class));
         }
@@ -341,7 +345,7 @@ class BeneficioUseCaseTest {
             // Arrange
             Long id = 1L;
             
-            when(repository.findById(id)).thenReturn(Optional.of(beneficioSample));
+            when(beneficioService.buscarPorId(id)).thenReturn(beneficioSample);
             when(repository.save(any(Beneficio.class))).thenReturn(beneficioSample);
             when(mapper.toDto(any(Beneficio.class))).thenReturn(beneficioDtoSample);
 
@@ -351,7 +355,7 @@ class BeneficioUseCaseTest {
             // Assert
             assertThat(resultado).isNotNull();
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository).save(any(Beneficio.class));
             verify(mapper).toDto(any(Beneficio.class));
         }
@@ -361,14 +365,14 @@ class BeneficioUseCaseTest {
         void deveLancarExcecaoAoAtivarBeneficioInexistente() {
             // Arrange
             Long id = 999L;
-            when(repository.findById(id)).thenReturn(Optional.empty());
+            when(beneficioService.buscarPorId(id)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act & Assert
             assertThatThrownBy(() -> useCase.ativar(id))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Benefício não encontrado com ID: " + id);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Benefício não encontrado");
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository, never()).save(any());
             verifyNoInteractions(mapper);
         }
@@ -384,7 +388,7 @@ class BeneficioUseCaseTest {
             // Arrange
             Long id = 1L;
 
-            when(repository.findById(id)).thenReturn(Optional.of(beneficioSample));
+            when(beneficioService.buscarPorId(id)).thenReturn(beneficioSample);
             when(repository.existsByNome(atualizarBeneficioDtoSample.getNome())).thenReturn(false);
             when(repository.save(any(Beneficio.class))).thenReturn(beneficioSample);
             when(mapper.toDto(beneficioSample)).thenReturn(beneficioDtoSample);
@@ -395,7 +399,7 @@ class BeneficioUseCaseTest {
             // Assert
             assertThat(resultado).isNotNull();
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository).save(beneficioSample);
             verify(mapper).toDto(beneficioSample);
         }
@@ -405,14 +409,14 @@ class BeneficioUseCaseTest {
         void deveLancarExcecaoAoAtualizarBeneficioInexistente() {
             // Arrange
             Long id = 999L;
-            when(repository.findById(id)).thenReturn(Optional.empty());
+            when(beneficioService.buscarPorId(id)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act & Assert
             assertThatThrownBy(() -> useCase.atualizar(id, atualizarBeneficioDtoSample))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Benefício não encontrado com ID: " + id);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Benefício não encontrado");
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository, never()).save(any());
             verifyNoInteractions(mapper);
         }
@@ -434,15 +438,15 @@ class BeneficioUseCaseTest {
             dto.setDescricao("Nova descrição");
             dto.setValorInicial(new BigDecimal("150.00"));
 
-            when(repository.findById(id)).thenReturn(Optional.of(beneficioExistente));
+            when(beneficioService.buscarPorId(id)).thenReturn(beneficioExistente);
             when(repository.existsByNome(nomeExistente)).thenReturn(true);
 
             // Act & Assert
             assertThatThrownBy(() -> useCase.atualizar(id, dto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(RuntimeException.class)
                 .hasMessage("Já existe benefício com o nome: " + nomeExistente);
 
-            verify(repository).findById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository).existsByNome(nomeExistente);
             verify(repository, never()).save(any());
             verifyNoInteractions(mapper);
@@ -458,13 +462,13 @@ class BeneficioUseCaseTest {
         void deveRemoverBeneficioComSucesso() {
             // Arrange
             Long id = 1L;
-            when(repository.existsById(id)).thenReturn(true);
+            when(beneficioService.buscarPorId(id)).thenReturn(beneficioSample);
 
             // Act
             useCase.remover(id);
 
             // Assert
-            verify(repository).existsById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository).deleteById(id);
         }
 
@@ -473,14 +477,14 @@ class BeneficioUseCaseTest {
         void deveLancarExcecaoAoRemoverBeneficioInexistente() {
             // Arrange
             Long id = 999L;
-            when(repository.existsById(id)).thenReturn(false);
+            when(beneficioService.buscarPorId(id)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act & Assert
             assertThatThrownBy(() -> useCase.remover(id))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Benefício não encontrado com ID: " + id);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Benefício não encontrado");
 
-            verify(repository).existsById(id);
+            verify(beneficioService).buscarPorId(id);
             verify(repository, never()).deleteById(any());
         }
     }

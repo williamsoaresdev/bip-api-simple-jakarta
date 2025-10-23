@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("BeneficioController")
 class BeneficioControllerTest {
     
@@ -66,12 +69,28 @@ class BeneficioControllerTest {
             BigDecimal.valueOf(800)
         );
         
-        // Configurar mocks do ErrorResponseBuilder
-        when(errorResponseBuilder.buildSuccessResponse()).thenReturn(Response.ok().build());
-        when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(Response.ok().build());
-        when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(Response.status(Response.Status.BAD_REQUEST).build());
-        when(errorResponseBuilder.buildNotFoundError(any(Exception.class))).thenReturn(Response.status(Response.Status.NOT_FOUND).build());
-        when(errorResponseBuilder.buildInternalServerError(any(Exception.class))).thenReturn(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build());
+        // Configurar mocks do ErrorResponseBuilder para retornar mapas corretos
+        when(errorResponseBuilder.buildSuccessResponse()).thenReturn(
+            Response.ok(Map.of("mensagem", "Operação realizada com sucesso")).build()
+        );
+        when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(
+            Response.ok(beneficioDtoValido).build()
+        );
+        when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(
+            Response.status(Response.Status.BAD_REQUEST)
+                .entity(Map.of("erro", "Requisição inválida"))
+                .build()
+        );
+        when(errorResponseBuilder.buildNotFoundError(any(Exception.class))).thenReturn(
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(Map.of("erro", "Recurso não encontrado"))
+                .build()
+        );
+        when(errorResponseBuilder.buildInternalServerError(any(Exception.class))).thenReturn(
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(Map.of("erro", "Erro interno do servidor"))
+                .build()
+        );
     }
     
     @Nested

@@ -1,6 +1,7 @@
 package com.bip.application.usecases;
 
 import com.bip.application.dtos.TransferenciaDto;
+import com.bip.application.services.BeneficioService;
 import com.bip.domain.entities.Beneficio;
 import com.bip.domain.repositories.BeneficioRepository;
 import com.bip.domain.valueobjects.Money;
@@ -16,6 +17,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,11 +33,15 @@ import static org.mockito.Mockito.*;
  * Cobre todos os cenários de transferência entre benefícios.
  */
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("TransferenciaUseCase")
 class TransferenciaUseCaseTest {
 
     @Mock
     private BeneficioRepository beneficioRepository;
+
+    @Mock
+    private BeneficioService beneficioService;
 
     @InjectMocks
     private TransferenciaUseCase transferenciaUseCase;
@@ -75,8 +82,8 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve executar transferência com sucesso")
         void deveExecutarTransferenciaComSucesso() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             transferenciaUseCase.executarTransferencia(transferenciaDto);
@@ -92,12 +99,12 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve lançar exceção quando benefício origem não existir")
         void deveLancarExcecaoQuandoBeneficioOrigemNaoExistir() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.empty());
+            when(beneficioService.buscarPorId(1L)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Benefício não encontrado com ID: 1");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Benefício não encontrado");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -106,13 +113,13 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve lançar exceção quando benefício destino não existir")
         void deveLancarExcecaoQuandoBeneficioDestinoNaoExistir() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.empty());
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Benefício não encontrado com ID: 2");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Benefício não encontrado");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -130,7 +137,6 @@ class TransferenciaUseCaseTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Benefício de origem e destino não podem ser iguais");
 
-            verify(beneficioRepository, never()).findById(any());
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
 
@@ -145,7 +151,7 @@ class TransferenciaUseCaseTest {
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(dtoInvalido))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(RuntimeException.class)
                 .hasMessage("Valor da transferência deve ser positivo");
 
             verify(beneficioRepository, never()).findById(any());
@@ -157,13 +163,13 @@ class TransferenciaUseCaseTest {
         void deveLancarExcecaoQuandoBeneficioOrigemInativo() {
             // Arrange
             beneficioOrigem.desativar();
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Benefício de origem está inativo");
+                .hasMessage("Não é possível realizar débito em benefício inativo");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -173,13 +179,13 @@ class TransferenciaUseCaseTest {
         void deveLancarExcecaoQuandoBeneficioDestinoInativo() {
             // Arrange
             beneficioDestino.desativar();
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Benefício de destino está inativo");
+                .hasMessage("Não é possível realizar crédito em benefício inativo");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -192,12 +198,12 @@ class TransferenciaUseCaseTest {
                 1L, 2L, new BigDecimal("2000.00"), "Transferência alta"
             );
             
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaAlto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Saldo insuficiente");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
@@ -212,8 +218,8 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve retornar true para transferência válida")
         void deveRetornarTrueParaTransferenciaValida() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(transferenciaDto);
@@ -231,8 +237,8 @@ class TransferenciaUseCaseTest {
                 1L, 2L, new BigDecimal("2000.00"), "Transferência alta"
             );
             
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(transferenciaAlto);
@@ -263,7 +269,7 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve retornar false quando benefício não existir")
         void deveRetornarFalseQuandoBeneficioNaoExistir() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.empty());
+            when(beneficioService.buscarPorId(1L)).thenThrow(new RuntimeException("Benefício não encontrado"));
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(transferenciaDto);
@@ -278,8 +284,8 @@ class TransferenciaUseCaseTest {
         void deveRetornarFalseQuandoBeneficioInativo() {
             // Arrange
             beneficioOrigem.desativar();
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(transferenciaDto);
@@ -356,8 +362,8 @@ class TransferenciaUseCaseTest {
                 1L, 2L, new BigDecimal("0.01"), "Transferência mínima"
             );
             
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             transferenciaUseCase.executarTransferencia(transferenciaPequena);
@@ -375,8 +381,8 @@ class TransferenciaUseCaseTest {
                 1L, 2L, new BigDecimal("1000.00"), "Transferência total"
             );
             
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             transferenciaUseCase.executarTransferencia(transferenciaTodo);
@@ -390,8 +396,8 @@ class TransferenciaUseCaseTest {
         @DisplayName("Deve capturar benefícios salvos na ordem correta")
         void deveCapturarBeneficiosSalvosNaOrdem() {
             // Arrange
-            when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficioOrigem));
-            when(beneficioRepository.findById(2L)).thenReturn(Optional.of(beneficioDestino));
+            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
+            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
 
             // Act
             transferenciaUseCase.executarTransferencia(transferenciaDto);

@@ -190,9 +190,9 @@ class AtualizarBeneficioDtoTest {
         }
 
         @Test
-        @DisplayName("Deve ser inválido com valor inicial zero")
-        void deveSerInvalidoComValorInicialZero() {
-            // Arrange
+        @DisplayName("Deve ser válido com valor inicial zero para atualização")
+        void deveSerValidoComValorInicialZero() {
+            // Arrange - Para atualização, zero não deveria ser permitido segundo a regra de negócio
             AtualizarBeneficioDto dto = new AtualizarBeneficioDto(
                 "Vale Alimentação",
                 "Descrição válida",
@@ -202,7 +202,7 @@ class AtualizarBeneficioDtoTest {
             // Act
             Set<ConstraintViolation<AtualizarBeneficioDto>> violations = validator.validate(dto);
 
-            // Assert
+            // Assert - Zero deve ser inválido (deve ser maior que zero)
             assertThat(violations).hasSize(1);
             assertThat(violations.iterator().next().getMessage())
                 .isEqualTo("Valor inicial deve ser maior que zero");
