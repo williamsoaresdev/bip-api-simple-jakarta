@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 
+         http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.11.1</version>
+    </skin>
+
+    <bannerLeft>
+        <name>BIP API - Sistema de Gestão de Benefícios</name>
+        <href>index.html</href>
+    </bannerLeft>
+
+    <bannerRight>
+        <name>Jakarta EE 10</name>
+        <href>https://jakarta.ee/</href>
+    </bannerRight>
+
+    <publishDate position="bottom"/>
+    <version position="bottom"/>
+
+    <custom>
+        <fluidoSkin>
+            <topBarEnabled>true</topBarEnabled>
+            <sideBarEnabled>true</sideBarEnabled>
+            <topBarContainerStyle>width: 90%;</topBarContainerStyle>
+            <navBarStyle>navbar-dark bg-dark</navBarStyle>
+            <gitHub>
+                <projectId>williamsoaresdev/bip-api-simple-jakarta</projectId>
+                <ribbonOrientation>right</ribbonOrientation>
+                <ribbonColor>darkblue</ribbonColor>
+            </gitHub>
+        </fluidoSkin>
+    </custom>
+
+    <body>
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta name="description" content="Sistema de Gestão de Benefícios com Jakarta EE 10 e Clean Architecture"/>
+            <meta name="keywords" content="Jakarta EE, Clean Architecture, Java, REST API, Benefícios"/>
+        </head>
+
+        <menu name="📋 Navegação Principal">
+            <item name="🏠 Início" href="index.html"/>
+            <item name="📖 Sobre o Projeto" href="project-info.html"/>
+            <item name="🚀 Como Usar" href="usage.html"/>
+            <item name="🏗️ Arquitetura" href="architecture.html"/>
+        </menu>
+
+        <menu name="📊 Relatórios de Qualidade">
+            <item name="🧪 Testes Unitários" href="surefire-report.html"/>
+            <item name="📈 Cobertura de Código" href="jacoco/index.html"/>
+            <item name="✅ CheckStyle" href="checkstyle.html"/>
+            <item name="🔍 PMD" href="pmd.html"/>
+            <item name="🐛 SpotBugs" href="spotbugs.html"/>
+            <item name="📋 CPD (Duplicação)" href="cpd.html"/>
+        </menu>
+
+        <menu name="📚 Documentação">
+            <item name="📖 JavaDoc" href="apidocs/index.html"/>
+            <item name="🔗 Dependências" href="dependencies.html"/>
+            <item name="🏷️ Licença" href="licenses.html"/>
+            <item name="👥 Equipe" href="team.html"/>
+        </menu>
+
+        <menu name="🔧 Informações Técnicas">
+            <item name="📦 Sumário do Projeto" href="project-summary.html"/>
+            <item name="🎯 CI/CD" href="ci-management.html"/>
+            <item name="📧 Mailing Lists" href="mailing-lists.html"/>
+            <item name="🐛 Issues Tracking" href="issue-management.html"/>
+            <item name="📊 Plugin Management" href="plugin-management.html"/>
+        </menu>
+
+        <breadcrumbs>
+            <item name="BIP API" href="index.html"/>
+        </breadcrumbs>
+
+        <footer>
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>BIP API - Sistema de Gestão de Benefícios</strong><br/>
+                    Desenvolvido com Jakarta EE 10 e Clean Architecture<br/>
+                    <a href="https://jakarta.ee/">Jakarta EE 10</a> | 
+                    <a href="https://github.com/williamsoaresdev/bip-api-simple-jakarta">GitHub</a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <strong>Tecnologias:</strong><br/>
+                    Java 17+ | Jakarta EE 10 | Maven 3.9+<br/>
+                    JUnit 5 | Mockito | JaCoCo | CheckStyle | PMD | SpotBugs
+                </div>
+            </div>
+        </footer>
+    </body>
+</project>

@@ -84,7 +84,7 @@ public class Beneficio implements Serializable {
     /**
      * Construtor para criação de benefício
      */
-    public Beneficio(String nome, String descricao, Money saldoInicial) {
+    public Beneficio(final String nome, final String descricao, final Money saldoInicial) {
         this.nome = Objects.requireNonNull(nome, "Nome não pode ser nulo");
         this.descricao = descricao;
         this.saldo = saldoInicial != null ? saldoInicial : Money.zero();
@@ -96,7 +96,7 @@ public class Beneficio implements Serializable {
     /**
      * Factory method para criar benefício
      */
-    public static Beneficio criar(String nome, String descricao, Money saldoInicial) {
+    public static Beneficio criar(final String nome, final String descricao, final Money saldoInicial) {
         return new Beneficio(nome, descricao, saldoInicial);
     }
 
@@ -107,7 +107,7 @@ public class Beneficio implements Serializable {
     /**
      * Verifica se possui saldo suficiente para débito
      */
-    public boolean possuiSaldoSuficiente(Money valorDebito) {
+    public boolean possuiSaldoSuficiente(final Money valorDebito) {
         if (valorDebito == null) {
             return false;
         }
@@ -117,7 +117,7 @@ public class Beneficio implements Serializable {
     /**
      * Realiza débito no benefício com validação de saldo
      */
-    public void debitar(Money valorDebito) {
+    public void debitar(final Money valorDebito) {
         validarBeneficioAtivo("débito");
         
         if (valorDebito == null || !valorDebito.isPositive()) {
@@ -257,55 +257,6 @@ public class Beneficio implements Serializable {
     public Long getVersao() {
         return versao;
     }
-    
-    // ================================
-    // Compatibilidade com código legacy (temporário)
-    // ================================
-    
-    /**
-     * @deprecated Use getSaldo().getValor() 
-     */
-    @Deprecated(forRemoval = true)
-    public java.math.BigDecimal getValor() {
-        return saldo != null ? saldo.getValor() : java.math.BigDecimal.ZERO;
-    }
-    
-    /**
-     * @deprecated Use constructor ou factory methods
-     */
-    @Deprecated(forRemoval = true)
-    public void setValor(java.math.BigDecimal valor) {
-        this.saldo = valor != null ? Money.of(valor) : Money.zero();
-        this.atualizadoEm = LocalDateTime.now();
-    }
-    
-    /**
-     * @deprecated Use constructor ou factory methods
-     */
-    @Deprecated(forRemoval = true)
-    public void setNome(String nome) {
-        this.nome = nome;
-        this.atualizadoEm = LocalDateTime.now();
-    }
-    
-    /**
-     * @deprecated Use constructor ou factory methods  
-     */
-    @Deprecated(forRemoval = true)
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-        this.atualizadoEm = LocalDateTime.now();
-    }
-    
-    /**
-     * @deprecated Use ativar()/desativar()
-     */
-    @Deprecated(forRemoval = true)
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-        this.atualizadoEm = LocalDateTime.now();
-    }
-
     // ================================
     // Object Methods
     // ================================

@@ -1,66 +1,46 @@
 package com.bip.application.dtos;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import jakarta.validation.constraints.DecimalMin;
 
 /**
- * DTO para atualização de benefício
- * Usado na camada de aplicação
+ * DTO para atualização de benefício.
+ * Usado na camada de aplicação para atualizar dados de um benefício existente.
+ * 
+ * @author BIP API Team
+ * @since 1.0
  */
-public class AtualizarBeneficioDto {
+public class AtualizarBeneficioDto extends BaseDto {
     
-    @NotBlank(message = "Nome é obrigatório")
-    @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
-    private String nome;
+    // Sobrescreve a validação do BaseDto para permitir valor nulo em atualizações
+    @DecimalMin(value = "0.00", inclusive = true, message = "Valor inicial deve ser positivo ou zero")
+    protected BigDecimal valorInicial;
     
-    @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
-    private String descricao;
-    
-    @DecimalMin(value = "0.01", message = "Valor inicial deve ser maior que zero")
-    private BigDecimal valorInicial;
-    
-    // Construtores
-    public AtualizarBeneficioDto() {}
-    
-    public AtualizarBeneficioDto(String nome, String descricao, BigDecimal valorInicial) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.valorInicial = valorInicial;
+    /**
+     * Construtor padrão.
+     */
+    public AtualizarBeneficioDto() {
+        super();
     }
     
-    // Getters e Setters
-    public String getNome() {
-        return nome;
+    /**
+     * Construtor com parâmetros.
+     * 
+     * @param nome o nome do benefício
+     * @param descricao a descrição do benefício
+     * @param valorInicial o valor inicial do benefício
+     */
+    public AtualizarBeneficioDto(final String nome, final String descricao, final BigDecimal valorInicial) {
+        super(nome, descricao, valorInicial);
     }
     
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    
-    public String getDescricao() {
-        return descricao;
-    }
-    
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    
+    @Override
     public BigDecimal getValorInicial() {
         return valorInicial;
     }
     
-    public void setValorInicial(BigDecimal valorInicial) {
-        this.valorInicial = valorInicial;
-    }
-    
     @Override
-    public String toString() {
-        return "AtualizarBeneficioDto{" +
-                "nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", valorInicial=" + valorInicial +
-                '}';
+    public void setValorInicial(final BigDecimal valorInicial) {
+        this.valorInicial = valorInicial;
     }
 }

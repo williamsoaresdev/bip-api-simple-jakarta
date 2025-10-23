@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<ruleset name="BIP API PMD Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        PMD Ruleset personalizado para BIP API - Sistema de Gestão de Benefícios
+        Configuração otimizada para projetos Jakarta EE com Clean Architecture
+    </description>
+
+    <!-- Best Practices -->
+    <rule ref="category/java/bestpractices.xml">
+        <!-- Permitir System.out.println em testes -->
+        <exclude name="SystemPrintln"/>
+        <!-- Permitir campos públicos em DTOs -->
+        <exclude name="DefaultPackage"/>
+        <!-- Permitir JUnit asserts sem mensagem -->
+        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <!-- Permitir catch de Exception genérica em alguns casos -->
+        <exclude name="AvoidCatchingGenericException"/>
+    </rule>
+
+    <!-- Code Style -->
+    <rule ref="category/java/codestyle.xml">
+        <!-- Configurações personalizadas -->
+        <exclude name="ShortVariable"/>
+        <exclude name="LongVariable"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="TooManyStaticImports"/>
+        <exclude name="OnlyOneReturn"/>
+        <!-- Permitir campos públicos finais -->
+        <exclude name="DefaultPackage"/>
+        <!-- Permitir comentários vazios -->
+        <exclude name="CommentDefaultAccessModifier"/>
+        <!-- Permitir classes sem comentário de package -->
+        <exclude name="CommentRequired"/>
+    </rule>
+
+    <!-- Configuração específica para nomes de variáveis -->
+    <rule ref="category/java/codestyle.xml/ShortVariable">
+        <properties>
+            <property name="minimum" value="2"/>
+            <property name="xpath">
+                <value>
+                //VariableDeclaratorId[string-length(@Image) &lt; 2]
+                [not(ancestor::ForInit)]
+                [not(../../VariableDeclarator and ../../../LocalVariableDeclaration and ../../../../ForStatement)]
+                [not((ancestor::FormalParameter) and (ancestor::TryStatement))]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Configuração para métodos longos -->
+    <rule ref="category/java/codestyle.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="30"/>
+        </properties>
+    </rule>
+
+    <!-- Design -->
+    <rule ref="category/java/design.xml">
+        <!-- Permitir mais de 7 parâmetros em construtores de DTOs -->
+        <exclude name="ExcessiveParameterList"/>
+        <!-- Permitir classes utilitárias sem construtor privado se estiverem bem documentadas -->
+        <exclude name="UseUtilityClass"/>
+        <!-- Permitir métodos que retornam arrays -->
+        <exclude name="MethodReturnsInternalArray"/>
+        <!-- Permitir switch sem default em alguns casos -->
+        <exclude name="SwitchStmtsShouldHaveDefault"/>
+    </rule>
+
+    <!-- Configuração para complexidade ciclomática -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="80"/>
+            <property name="methodReportLevel" value="15"/>
+        </properties>
+    </rule>
+
+    <!-- Configuração para número excessivo de métodos -->
+    <rule ref="category/java/design.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="100"/>
+        </properties>
+    </rule>
+
+    <!-- Configuração para muitos métodos públicos -->
+    <rule ref="category/java/design.xml/ExcessivePublicCount">
+        <properties>
+            <property name="minimum" value="45"/>
+        </properties>
+    </rule>
+
+    <!-- Configuração para muitas linhas de código -->
+    <rule ref="category/java/design.xml/ExcessiveClassLength">
+        <properties>
+            <property name="minimum" value="1000"/>
+        </properties>
+    </rule>
+
+    <!-- Error Prone -->
+    <rule ref="category/java/errorprone.xml">
+        <!-- Permitir campos não finais em beans -->
+        <exclude name="BeanMembersShouldSerialize"/>
+        <!-- Permitir construtores vazios -->
+        <exclude name="UncommentedEmptyConstructor"/>
+        <!-- Permitir comparação com null -->
+        <exclude name="CompareObjectsWithEquals"/>
+        <!-- Permitir uso de SimpleDateFormat -->
+        <exclude name="AvoidUsingShortType"/>
+    </rule>
+
+    <!-- Multithreading -->
+    <rule ref="category/java/multithreading.xml">
+        <!-- Permitir uso de volatile quando necessário -->
+        <exclude name="AvoidUsingVolatile"/>
+    </rule>
+
+    <!-- Performance -->
+    <rule ref="category/java/performance.xml">
+        <!-- Permitir concatenação de strings em loops se otimizada pelo compilador -->
+        <exclude name="AvoidInstantiatingObjectsInLoops"/>
+        <!-- Permitir uso de ArrayList quando apropriado -->
+        <exclude name="UseArrayListInsteadOfVector"/>
+    </rule>
+
+    <!-- Security -->
+    <rule ref="category/java/security.xml"/>
+
+    <!-- Regras personalizadas para Jakarta EE -->
+    
+    <!-- Evitar uso de @Stateful desnecessário -->
+    <rule name="AvoidUnnecessaryStatefulEJB"
+          language="java"
+          message="Considere usar @Stateless se não há necessidade de manter estado"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            EJBs Stateful devem ser usados apenas quando necessário manter estado entre chamadas.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                //ClassOrInterfaceDeclaration[
+                    .//Annotation//Name[@Image='Stateful'] and
+                    not(.//FieldDeclaration[not(.//Annotation//Name[@Image='Inject' or @Image='EJB'])])
+                ]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Verificar injeção de dependências -->
+    <rule name="PreferCDIOverEJBInjection"
+          language="java"
+          message="Prefira @Inject sobre @EJB para injeção de dependências"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            CDI @Inject é mais flexível e testável que @EJB.
+        </description>
+        <priority>4</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                //FieldDeclaration[.//Annotation//Name[@Image='EJB']]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Verificar uso adequado de transações -->
+    <rule name="TransactionAttributeConsistency"
+          language="java"
+          message="Verifique se o atributo de transação está adequado para o método"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            Métodos que apenas consultam dados podem usar SUPPORTS ao invés de REQUIRED.
+        </description>
+        <priority>4</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                //MethodDeclaration[
+                    starts-with(@Name, 'find') or 
+                    starts-with(@Name, 'get') or 
+                    starts-with(@Name, 'list') or 
+                    starts-with(@Name, 'search')
+                ][
+                    .//Annotation//Name[@Image='TransactionAttribute'] and
+                    not(.//AnnotationMethodMemberValuePair[@Image='SUPPORTS'])
+                ]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Verificar uso de DTOs em APIs REST -->
+    <rule name="UseDTO"
+          language="java"
+          message="APIs REST devem usar DTOs ao invés de entidades diretamente"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            Evite expor entidades JPA diretamente em APIs REST.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                //ClassOrInterfaceDeclaration[
+                    .//Annotation//Name[@Image='Path' or @Image='RestController' or @Image='Controller']
+                ]//MethodDeclaration[
+                    .//Annotation//Name[@Image='GET' or @Image='POST' or @Image='PUT' or @Image='DELETE']
+                ]//Type//ClassOrInterfaceType[
+                    @Image='Beneficio' and 
+                    not(ends-with(@Image, 'Dto') or ends-with(@Image, 'DTO'))
+                ]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Verificar nomeação adequada de repositórios -->
+    <rule name="RepositoryNamingConvention"
+          language="java"
+          message="Repositórios devem seguir a convenção de nomenclatura"
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
+        <description>
+            Classes de repositório devem terminar com 'Repository'.
+        </description>
+        <priority>4</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                //ClassOrInterfaceDeclaration[
+                    .//Annotation//Name[@Image='Repository' or @Image='Stateless'] and
+                    contains(@SimpleName, 'Repository') and
+                    not(ends-with(@SimpleName, 'Repository'))
+                ]
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Exclusões específicas para testes -->
+    <exclude-pattern>.*/src/test/.*</exclude-pattern>
+
+    <!-- Exclusões para código gerado -->
+    <exclude-pattern>.*/target/.*</exclude-pattern>
+    <exclude-pattern>.*/generated/.*</exclude-pattern>
+
+</ruleset>

@@ -4,6 +4,7 @@ import com.bip.application.dtos.AtualizarBeneficioDto;
 import com.bip.application.dtos.BeneficioDto;
 import com.bip.application.dtos.CriarBeneficioDto;
 import com.bip.application.usecases.BeneficioUseCase;
+import com.bip.presentation.utils.ErrorResponseBuilder;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,9 @@ class BeneficioControllerTest {
     
     @Mock
     private BeneficioUseCase beneficioUseCase;
+    
+    @Mock
+    private ErrorResponseBuilder errorResponseBuilder;
     
     @InjectMocks
     private BeneficioController controller;
@@ -61,6 +65,13 @@ class BeneficioControllerTest {
             "Descrição atualizada",
             BigDecimal.valueOf(800)
         );
+        
+        // Configurar mocks do ErrorResponseBuilder
+        when(errorResponseBuilder.buildSuccessResponse()).thenReturn(Response.ok().build());
+        when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(Response.ok().build());
+        when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(Response.status(Response.Status.BAD_REQUEST).build());
+        when(errorResponseBuilder.buildNotFoundError(any(Exception.class))).thenReturn(Response.status(Response.Status.NOT_FOUND).build());
+        when(errorResponseBuilder.buildInternalServerError(any(Exception.class))).thenReturn(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build());
     }
     
     @Nested

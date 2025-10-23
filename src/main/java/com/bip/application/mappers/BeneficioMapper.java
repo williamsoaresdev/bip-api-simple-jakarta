@@ -65,23 +65,4 @@ public class BeneficioMapper {
             saldoInicial
         );
     }
-    
-    /**
-     * Atualiza entidade existente com dados do DTO
-     * NOTA: Método deprecated - prefira usar casos de uso específicos
-     */
-    @Deprecated(forRemoval = true)
-    public void updateEntity(Beneficio beneficio, CriarBeneficioDto dto) {
-        if (beneficio == null || dto == null) {
-            return;
-        }
-        
-        // Usando setters deprecated para compatibilidade temporária
-        beneficio.setNome(dto.getNome());
-        beneficio.setDescricao(dto.getDescricao());
-        
-        if (dto.getValorInicial() != null) {
-            beneficio.setValor(dto.getValorInicial());
-        }
-    }
 }

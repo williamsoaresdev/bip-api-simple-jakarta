@@ -2,6 +2,7 @@ package com.bip.presentation.controllers;
 
 import com.bip.application.dtos.TransferenciaDto;
 import com.bip.application.usecases.TransferenciaUseCase;
+import com.bip.presentation.utils.ErrorResponseBuilder;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -12,6 +13,23 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller REST para operações de transferência entre benefícios.
+ * 
+ * <p>Fornece endpoints para:</p>
+ * <ul>
+ *   <li>Executar transferências entre benefícios</li>
+ *   <li>Validar transferências antes da execução</li>
+ *   <li>Calcular taxas de transferência</li>
+ * </ul>
+ * 
+ * <p>Todos os endpoints seguem padrões REST e utilizam tratamento
+ * de erro padronizado através do {@link ErrorResponseBuilder}.</p>
+ * 
+ * @author BIP API Team
+ * @since 1.0
+ * @version 3.0.0
+ */
 @Path("/transferencias")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -20,6 +38,15 @@ public class TransferenciaController {
     @Inject
     private TransferenciaUseCase transferenciaUseCase;
     
+    @Inject
+    private ErrorResponseBuilder errorResponseBuilder;
+    
+    /**
+     * Executa uma transferência entre dois benefícios.
+     * 
+     * @param dto dados da transferência
+     * @return resposta com resultado da operação
+     */
     @POST
     public Response executarTransferencia(@Valid TransferenciaDto dto) {
         try {
@@ -34,28 +61,25 @@ public class TransferenciaController {
             resultado.put("descricao", dto.getDescricao());
             resultado.put("timestamp", LocalDateTime.now());
             
-            return Response.ok(resultado).build();
+            return errorResponseBuilder.buildSuccessResponse(resultado);
             
         } catch (IllegalArgumentException e) {
-            Map<String, Object> erro = new HashMap<>();
-            erro.put("erro", "Dados inválidos");
-            erro.put("detalhes", e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
+            return errorResponseBuilder.buildBadRequestError(e);
             
         } catch (IllegalStateException e) {
-            Map<String, Object> erro = new HashMap<>();
-            erro.put("erro", "Operação inválida");
-            erro.put("detalhes", e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
+            return errorResponseBuilder.buildBadRequestError(e);
             
         } catch (Exception e) {
-            Map<String, Object> erro = new HashMap<>();
-            erro.put("erro", "Erro interno do servidor");
-            erro.put("detalhes", e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(erro).build();
+            return errorResponseBuilder.buildInternalServerError(e);
         }
     }
     
+    /**
+     * Valida uma transferência sem executá-la.
+     * 
+     * @param dto dados da transferência
+     * @return resposta indicando se a transferência é válida
+     */
     @POST
     @Path("/validar")
     public Response validarTransferencia(@Valid TransferenciaDto dto) {
@@ -72,24 +96,26 @@ public class TransferenciaController {
                 resultado.put("motivo", "Transferência não é possível (saldo insuficiente, benefícios inativos ou IDs iguais)");
             }
             
-            return Response.ok(resultado).build();
+            return errorResponseBuilder.buildSuccessResponse(resultado);
             
         } catch (Exception e) {
-            Map<String, Object> erro = new HashMap<>();
-            erro.put("erro", "Erro na validação");
-            erro.put("detalhes", e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(erro).build();
+            return errorResponseBuilder.buildInternalServerError(e);
         }
     }
     
+    /**
+     * Calcula a taxa para uma transferência baseada no valor.
+     * 
+     * @param valor valor da transferência
+     * @return resposta com cálculo da taxa
+     */
     @GET
     @Path("/taxa")
     public Response calcularTaxa(@QueryParam("valor") BigDecimal valor) {
         try {
             if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
-                Map<String, Object> erro = new HashMap<>();
-                erro.put("erro", "Valor deve ser positivo");
-                return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
+                return errorResponseBuilder.buildBadRequestError(
+                    new IllegalArgumentException("Valor deve ser positivo"));
             }
             
             var taxa = transferenciaUseCase.calcularTaxa(valor);
@@ -99,13 +125,10 @@ public class TransferenciaController {
             resultado.put("taxa", taxa.getValor());
             resultado.put("valorComTaxa", valor.add(taxa.getValor()));
             
-            return Response.ok(resultado).build();
+            return errorResponseBuilder.buildSuccessResponse(resultado);
             
         } catch (Exception e) {
-            Map<String, Object> erro = new HashMap<>();
-            erro.put("erro", "Erro no cálculo da taxa");
-            erro.put("detalhes", e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(erro).build();
+            return errorResponseBuilder.buildInternalServerError(e);
         }
     }
 }

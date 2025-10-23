@@ -1,6 +1,7 @@
 package com.bip.application.usecases;
 
 import com.bip.application.dtos.TransferenciaDto;
+import com.bip.application.services.BeneficioService;
 import com.bip.domain.entities.Beneficio;
 import com.bip.domain.repositories.BeneficioRepository;
 import com.bip.domain.valueobjects.Money;
@@ -16,11 +17,14 @@ public class TransferenciaUseCase {
     @Inject
     private BeneficioRepository beneficioRepository;
     
+    @Inject
+    private BeneficioService beneficioService;
+    
     public void executarTransferencia(@Valid @NotNull TransferenciaDto dto) {
         validarParametrosTransferencia(dto);
         
-        Beneficio origem = buscarBeneficioPorId(dto.getBeneficioOrigemId());
-        Beneficio destino = buscarBeneficioPorId(dto.getBeneficioDestinoId());
+        Beneficio origem = beneficioService.buscarPorId(dto.getBeneficioOrigemId());
+        Beneficio destino = beneficioService.buscarPorId(dto.getBeneficioDestinoId());
         
         validarBeneficios(origem, destino);
         
@@ -36,8 +40,8 @@ public class TransferenciaUseCase {
         try {
             validarParametrosTransferencia(dto);
             
-            Beneficio origem = buscarBeneficioPorId(dto.getBeneficioOrigemId());
-            Beneficio destino = buscarBeneficioPorId(dto.getBeneficioDestinoId());
+            Beneficio origem = beneficioService.buscarPorId(dto.getBeneficioOrigemId());
+            Beneficio destino = beneficioService.buscarPorId(dto.getBeneficioDestinoId());
             
             validarBeneficios(origem, destino);
             
@@ -55,9 +59,7 @@ public class TransferenciaUseCase {
     }
     
     private void validarParametrosTransferencia(TransferenciaDto dto) {
-        if (dto.getBeneficioOrigemId().equals(dto.getBeneficioDestinoId())) {
-            throw new IllegalArgumentException("Benefício de origem e destino não podem ser iguais");
-        }
+        beneficioService.validarBeneficiosDiferentes(dto.getBeneficioOrigemId(), dto.getBeneficioDestinoId());
         
         if (dto.getValor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Valor da transferência deve ser positivo");
@@ -65,17 +67,7 @@ public class TransferenciaUseCase {
     }
     
     private void validarBeneficios(Beneficio origem, Beneficio destino) {
-        if (!origem.getAtivo()) {
-            throw new IllegalStateException("Benefício de origem está inativo");
-        }
-        
-        if (!destino.getAtivo()) {
-            throw new IllegalStateException("Benefício de destino está inativo");
-        }
-    }
-    
-    private Beneficio buscarBeneficioPorId(Long id) {
-        return beneficioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Benefício não encontrado com ID: " + id));
+        beneficioService.validarAtivo(origem);
+        beneficioService.validarAtivo(destino);
     }
 }

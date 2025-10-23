@@ -4,6 +4,7 @@ import com.bip.application.dtos.AtualizarBeneficioDto;
 import com.bip.application.dtos.BeneficioDto;
 import com.bip.application.dtos.CriarBeneficioDto;
 import com.bip.application.mappers.BeneficioMapper;
+import com.bip.application.services.BeneficioService;
 import com.bip.domain.entities.Beneficio;
 import com.bip.domain.repositories.BeneficioRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,6 +29,9 @@ public class BeneficioUseCase {
     
     @Inject
     private BeneficioMapper beneficioMapper;
+    
+    @Inject
+    private BeneficioService beneficioService;
     
     /**
      * Lista todos os benefícios
@@ -149,7 +153,6 @@ public class BeneficioUseCase {
      * Método auxiliar para buscar benefício com tratamento de erro
      */
     private Beneficio buscarBeneficioPorId(Long id) {
-        return beneficioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Benefício não encontrado com ID: " + id));
+        return beneficioService.buscarPorId(id);
     }
 }

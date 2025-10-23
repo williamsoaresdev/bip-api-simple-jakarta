@@ -423,15 +423,14 @@ class BeneficioTest {
     }
 
     @Test
-    @DisplayName("Deve obter valor como BigDecimal (método deprecated)")
-    void deveObterValorComoBigDecimal() {
+    @DisplayName("Deve obter valor através do Money saldo")
+    void deveObterValorAtravesDoSaldo() {
         // Given
         Money valor = Money.of(new BigDecimal("150.75"));
         Beneficio beneficio = Beneficio.criar("Nome", "Desc", valor);
         
         // When
-        @SuppressWarnings("removal")
-        BigDecimal valorBigDecimal = beneficio.getValor();
+        BigDecimal valorBigDecimal = beneficio.getSaldo().getValor();
         
         // Then
         assertThat(valorBigDecimal).isEqualTo(new BigDecimal("150.75"));
@@ -444,69 +443,68 @@ class BeneficioTest {
         Beneficio beneficio = new Beneficio(); // Construtor inicializa com Money.zero()
         
         // When
-        @SuppressWarnings("removal")
-        BigDecimal valor = beneficio.getValor();
+        BigDecimal valor = beneficio.getSaldo().getValor();
         
         // Then
         assertThat(valor).isEqualByComparingTo(BigDecimal.ZERO); // Usa comparação numerica
     }
 
     @Test
-    @DisplayName("Deve definir ativo diretamente (método deprecated)")
-    void deveDefinirAtivoDiretamente() {
+    @DisplayName("Deve ativar e inativar benefício através de métodos públicos")
+    void deveAtivarEInativarBeneficio() {
         // Given
-        Beneficio beneficio = new Beneficio();
+        Beneficio beneficio = Beneficio.criar(
+            "Nome Teste",
+            "Descrição Teste", 
+            Money.of(new BigDecimal("100.00"))
+        );
         
-        // When & Then - Teste do método deprecated setAtivo
-        setAtivoDeprecated(beneficio, true);
+        // When & Then - Benefício criado deve estar ativo
         assertThat(beneficio.getAtivo()).isTrue();
         
-        setAtivoDeprecated(beneficio, false);
+        // When - Inativar
+        beneficio.desativar();
+        
+        // Then
         assertThat(beneficio.getAtivo()).isFalse();
+        
+        // When - Ativar novamente  
+        beneficio.ativar();
+        
+        // Then
+        assertThat(beneficio.getAtivo()).isTrue();
     }
 
     @Test
-    @DisplayName("Deve definir valor como BigDecimal (método deprecated)")
-    void deveDefinirValorComoBigDecimal() {
+    @DisplayName("Deve acessar valor através do Money saldo")
+    void deveAcessarValorAtravesDoSaldo() {
         // Given
-        Beneficio beneficio = new Beneficio();
-        BigDecimal valor = new BigDecimal("200.50");
+        Beneficio beneficio = Beneficio.criar(
+            "Nome",
+            "Descrição",
+            Money.of(new BigDecimal("200.50"))
+        );
         
         // When
-        setValorDeprecated(beneficio, valor);
+        BigDecimal valorObtido = beneficio.getSaldo().getValor();
         
         // Then
-        @SuppressWarnings("removal")
-        BigDecimal valorObtido = beneficio.getValor();
-        assertThat(valorObtido).isEqualTo(valor);
-        assertThat(beneficio.getSaldo()).isEqualTo(Money.of(valor));
+        assertThat(valorObtido).isEqualTo(new BigDecimal("200.50"));
+        assertThat(beneficio.getSaldo()).isEqualTo(Money.of(new BigDecimal("200.50")));
     }
 
     @Test
-    @DisplayName("Deve definir valor null como zero (método deprecated)")
-    void deveDefinirValorNullComoZero() {
+    @DisplayName("Deve inicializar com Money.zero quando usar construtor padrão")
+    void deveInicializarComMoneyZero() {
         // Given
         Beneficio beneficio = new Beneficio();
         
         // When
-        setValorDeprecated(beneficio, null);
+        Money saldo = beneficio.getSaldo();
         
         // Then
-        @SuppressWarnings("removal")
-        BigDecimal valorObtido = beneficio.getValor();
-        assertThat(valorObtido).isEqualByComparingTo(BigDecimal.ZERO); // Usa comparação numérica
-        assertThat(beneficio.getSaldo()).isEqualTo(Money.zero());
-    }
-
-    // Métodos auxiliares para testar métodos deprecated
-    @SuppressWarnings("removal")
-    private void setAtivoDeprecated(Beneficio beneficio, Boolean ativo) {
-        beneficio.setAtivo(ativo);
-    }
-
-    @SuppressWarnings("removal")
-    private void setValorDeprecated(Beneficio beneficio, BigDecimal valor) {
-        beneficio.setValor(valor);
+        assertThat(saldo).isEqualTo(Money.zero());
+        assertThat(saldo.getValor()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     @Test
@@ -627,8 +625,8 @@ class BeneficioTest {
     }
 
     @Test
-    @DisplayName("getValor deve retornar ZERO quando saldo é null")
-    void getValorDeveRetornarZeroQuandoSaldoNull() throws Exception {
+    @DisplayName("getSaldo deve retornar Money.zero quando saldo é null")
+    void getSaldoDeveRetornarMoneyZeroQuandoSaldoNull() throws Exception {
         // Given
         Beneficio beneficio = new Beneficio();
         
@@ -638,10 +636,10 @@ class BeneficioTest {
         saldoField.set(beneficio, null);
         
         // When
-        @SuppressWarnings("removal")
-        BigDecimal valor = beneficio.getValor();
+        Money saldo = beneficio.getSaldo();
         
         // Then
-        assertThat(valor).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(saldo).isEqualTo(Money.zero());
+        assertThat(saldo.getValor()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 }
