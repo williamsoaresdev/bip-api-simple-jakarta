@@ -1,18 +1,16 @@
-package com.bip.entities;
+package com.bip.domain.entities;
 
+import com.bip.domain.valueobjects.Money;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Entidade JPA Jakarta para Benefício
- * Implementa controle de concorrência otimista com @Version
- * e validações com Bean Validation
+ * Entidade de domínio Benefício seguindo DDD
+ * Encapsula regras de negócio e usa Value Objects
  */
 @Entity
 @Table(name = "beneficio", 
@@ -33,7 +31,7 @@ import java.util.Objects;
     @NamedQuery(name = "Beneficio.countActive",
                 query = "SELECT COUNT(b) FROM Beneficio b WHERE b.ativo = true"),
     @NamedQuery(name = "Beneficio.sumActiveValues",
-                query = "SELECT COALESCE(SUM(b.valor), 0) FROM Beneficio b WHERE b.ativo = true")
+                query = "SELECT COALESCE(SUM(b.saldo.valor), 0) FROM Beneficio b WHERE b.ativo = true")
 })
 public class Beneficio implements Serializable {
     
@@ -52,10 +50,9 @@ public class Beneficio implements Serializable {
     @Column(length = 500)
     private String descricao;
     
-    @NotNull(message = "Valor é obrigatório")
-    @PositiveOrZero(message = "Valor deve ser positivo ou zero")
-    @Column(nullable = false, precision = 19, scale = 2)
-    private BigDecimal valor;
+    @Embedded
+    @AttributeOverride(name = "valor", column = @Column(name = "valor", nullable = false, precision = 19, scale = 2))
+    private Money saldo;
     
     @NotNull
     @Column(nullable = false)
@@ -77,62 +74,77 @@ public class Beneficio implements Serializable {
     // Construtores
     // ================================
     
-    public Beneficio() {}
+    /**
+     * Construtor padrão para JPA
+     */
+    protected Beneficio() {
+        this.saldo = Money.zero();
+    }
     
-    public Beneficio(String nome, String descricao, BigDecimal valor) {
-        this.nome = nome;
+    /**
+     * Construtor para criação de benefício
+     */
+    public Beneficio(String nome, String descricao, Money saldoInicial) {
+        this.nome = Objects.requireNonNull(nome, "Nome não pode ser nulo");
         this.descricao = descricao;
-        this.valor = valor != null ? valor : BigDecimal.ZERO;
+        this.saldo = saldoInicial != null ? saldoInicial : Money.zero();
         this.ativo = Boolean.TRUE;
         this.criadoEm = LocalDateTime.now();
         this.atualizadoEm = LocalDateTime.now();
     }
+    
+    /**
+     * Factory method para criar benefício
+     */
+    public static Beneficio criar(String nome, String descricao, Money saldoInicial) {
+        return new Beneficio(nome, descricao, saldoInicial);
+    }
 
     // ================================
-    // Métodos de Negócio
+    // Métodos de Negócio (Domain Logic)
     // ================================
     
     /**
      * Verifica se possui saldo suficiente para débito
      */
-    public boolean possuiSaldoSuficiente(BigDecimal valorDebito) {
-        if (valorDebito == null || valorDebito.compareTo(BigDecimal.ZERO) <= 0) {
+    public boolean possuiSaldoSuficiente(Money valorDebito) {
+        if (valorDebito == null) {
             return false;
         }
-        return this.valor.compareTo(valorDebito) >= 0;
+        return this.saldo.isGreaterThanOrEqual(valorDebito);
     }
     
     /**
      * Realiza débito no benefício com validação de saldo
      */
-    public void debitar(BigDecimal valorDebito) {
-        if (!ativo) {
-            throw new IllegalStateException("Não é possível debitar de benefício inativo");
+    public void debitar(Money valorDebito) {
+        validarBeneficioAtivo("débito");
+        
+        if (valorDebito == null || !valorDebito.isPositive()) {
+            throw new IllegalArgumentException("Valor de débito deve ser positivo");
         }
         
         if (!possuiSaldoSuficiente(valorDebito)) {
             throw new IllegalArgumentException(
                 String.format("Saldo insuficiente. Saldo atual: %s, Tentativa de débito: %s", 
-                             valor, valorDebito));
+                             saldo, valorDebito));
         }
         
-        this.valor = this.valor.subtract(valorDebito);
+        this.saldo = this.saldo.subtract(valorDebito);
         this.atualizadoEm = LocalDateTime.now();
     }
     
     /**
      * Realiza crédito no benefício
      */
-    public void creditar(BigDecimal valorCredito) {
-        if (!ativo) {
-            throw new IllegalStateException("Não é possível creditar em benefício inativo");
-        }
+    public void creditar(Money valorCredito) {
+        validarBeneficioAtivo("crédito");
         
-        if (valorCredito == null || valorCredito.compareTo(BigDecimal.ZERO) <= 0) {
+        if (valorCredito == null || !valorCredito.isPositive()) {
             throw new IllegalArgumentException("Valor de crédito deve ser positivo");
         }
         
-        this.valor = this.valor.add(valorCredito);
+        this.saldo = this.saldo.add(valorCredito);
         this.atualizadoEm = LocalDateTime.now();
     }
     
@@ -157,6 +169,33 @@ public class Beneficio implements Serializable {
         this.ativo = Boolean.FALSE;
         this.atualizadoEm = LocalDateTime.now();
     }
+    
+    /**
+     * Atualiza dados do benefício (nome, descrição e saldo)
+     */
+    public void atualizarDados(String novoNome, String novaDescricao, java.math.BigDecimal novoValor) {
+        if (novoNome != null && !novoNome.trim().isEmpty()) {
+            this.nome = novoNome.trim();
+        }
+        
+        this.descricao = novaDescricao;
+        
+        if (novoValor != null && novoValor.compareTo(java.math.BigDecimal.ZERO) >= 0) {
+            this.saldo = Money.of(novoValor);
+        }
+        
+        this.atualizadoEm = LocalDateTime.now();
+    }
+    
+    /**
+     * Verifica se o benefício está ativo para operações
+     */
+    private void validarBeneficioAtivo(String operacao) {
+        if (!ativo) {
+            throw new IllegalStateException(
+                String.format("Não é possível realizar %s em benefício inativo", operacao));
+        }
+    }
 
     // ================================
     // Callbacks JPA
@@ -170,8 +209,8 @@ public class Beneficio implements Serializable {
         }
         atualizadoEm = now;
         
-        if (valor == null) {
-            valor = BigDecimal.ZERO;
+        if (saldo == null) {
+            saldo = Money.zero();
         }
         if (ativo == null) {
             ativo = Boolean.TRUE;
@@ -184,71 +223,87 @@ public class Beneficio implements Serializable {
     }
 
     // ================================
-    // Getters e Setters
+    // Getters (sem setters para manter encapsulamento)
     // ================================
     
     public Long getId() {
         return id;
     }
     
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
     public String getNome() {
         return nome;
-    }
-    
-    public void setNome(String nome) {
-        this.nome = nome;
     }
     
     public String getDescricao() {
         return descricao;
     }
     
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    
-    public BigDecimal getValor() {
-        return valor;
-    }
-    
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
+    public Money getSaldo() {
+        return saldo;
     }
     
     public Boolean getAtivo() {
         return ativo;
     }
     
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-    
     public LocalDateTime getCriadoEm() {
         return criadoEm;
-    }
-    
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
     }
     
     public LocalDateTime getAtualizadoEm() {
         return atualizadoEm;
     }
     
-    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-        this.atualizadoEm = atualizadoEm;
-    }
-    
     public Long getVersao() {
         return versao;
     }
     
-    public void setVersao(Long versao) {
-        this.versao = versao;
+    // ================================
+    // Compatibilidade com código legacy (temporário)
+    // ================================
+    
+    /**
+     * @deprecated Use getSaldo().getValor() 
+     */
+    @Deprecated(forRemoval = true)
+    public java.math.BigDecimal getValor() {
+        return saldo != null ? saldo.getValor() : java.math.BigDecimal.ZERO;
+    }
+    
+    /**
+     * @deprecated Use constructor ou factory methods
+     */
+    @Deprecated(forRemoval = true)
+    public void setValor(java.math.BigDecimal valor) {
+        this.saldo = valor != null ? Money.of(valor) : Money.zero();
+        this.atualizadoEm = LocalDateTime.now();
+    }
+    
+    /**
+     * @deprecated Use constructor ou factory methods
+     */
+    @Deprecated(forRemoval = true)
+    public void setNome(String nome) {
+        this.nome = nome;
+        this.atualizadoEm = LocalDateTime.now();
+    }
+    
+    /**
+     * @deprecated Use constructor ou factory methods  
+     */
+    @Deprecated(forRemoval = true)
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+        this.atualizadoEm = LocalDateTime.now();
+    }
+    
+    /**
+     * @deprecated Use ativar()/desativar()
+     */
+    @Deprecated(forRemoval = true)
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+        this.atualizadoEm = LocalDateTime.now();
     }
 
     // ================================
@@ -270,7 +325,7 @@ public class Beneficio implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("Beneficio{id=%d, nome='%s', valor=%s, ativo=%s}", 
-                           id, nome, valor, ativo);
+        return String.format("Beneficio{id=%d, nome='%s', saldo=%s, ativo=%s}", 
+                           id, nome, saldo, ativo);
     }
 }

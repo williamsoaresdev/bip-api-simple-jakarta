@@ -1,4 +1,4 @@
-package com.bip.config;
+package com.bip.infrastructure.configuration;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -9,7 +9,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 /**
- * Produtor CDI do EntityManager para Jetty
+ * Configuração CDI para produção do EntityManager
+ * Parte da camada de infraestrutura seguindo Clean Architecture
  */
 @ApplicationScoped
 public class EntityManagerProducer {

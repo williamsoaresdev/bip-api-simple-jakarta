@@ -16,7 +16,8 @@
     
     <!-- Interceptadores globais -->
     <interceptors>
-        <!-- Adicione interceptadores personalizados aqui se necessário -->
+        <!-- Interceptadores desabilitados temporariamente -->
+        <!-- <class>com.bip.infrastructure.configuration.TransactionalInterceptor</class> -->
     </interceptors>
     
     <!-- Decorators globais -->
