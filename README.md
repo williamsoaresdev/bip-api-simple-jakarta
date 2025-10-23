@@ -1,4 +1,4 @@
-# BIP API - Clean Architecture# 🏗️ BIP API - Clean Architecture Jakarta EE
+# 🏗️ BIP API - Clean Architecture Jakarta EE# 🏗️ BIP API - Clean Architecture Jakarta EE
 
 
 
@@ -6,245 +6,479 @@
 
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.org/)[![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.org/)
 
-[![Clean Architecture](https://img.shields.io/badge/Clean%20Architecture-✓-brightgreen.svg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)[![Jetty](https://img.shields.io/badge/Jetty-11.0.18-green.svg)](https://www.eclipse.org/jetty/)
+[![Clean Architecture](https://img.shields.io/badge/Clean%20Architecture-✓-brightgreen.svg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)[![Clean Architecture](https://img.shields.io/badge/Clean%20Architecture-✓-brightgreen.svg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-[![Jetty](https://img.shields.io/badge/Jetty-11.0.18-green.svg)](https://www.eclipse.org/jetty/)[![Clean Architecture](https://img.shields.io/badge/Clean%20Architecture-✓-brightgreen.svg)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+[![Tests](https://img.shields.io/badge/Tests-266%20passing-brightgreen.svg)](./src/test/)[![Tests](https://img.shields.io/badge/Tests-266%20passing-brightgreen.svg)](./src/test/)
 
-
-
-Sistema de gerenciamento de benefícios corporativos implementado com **Clean Architecture**, seguindo os princípios de **DDD** (Domain-Driven Design) e utilizando **Jakarta EE 10**.Sistema moderno de gerenciamento de benefícios implementado com **Clean Architecture**, **Jakarta EE 10** e **CRUD completo**, com separação clara de responsabilidades entre camadas.
+[![Coverage](https://img.shields.io/badge/Coverage-76%25-green.svg)](./target/site/jacoco/)[![Coverage](https://img.shields.io/badge/Coverage-76%25-green.svg)](./target/site/jacoco/)
 
 
 
-## 🏗️ Arquitetura## ✨ Destaques da Implementação
+Sistema moderno de gerenciamento de benefícios corporativos implementado com **Clean Architecture**, **Jakarta EE 10** e **CRUD completo**, seguindo os princípios de **DDD** (Domain-Driven Design) com separação clara de responsabilidades entre camadas.Sistema moderno de gerenciamento de benefícios corporativos implementado com **Clean Architecture**, **Jakarta EE 10** e **CRUD completo**, seguindo os princípios de **DDD** (Domain-Driven Design) com separação clara de responsabilidades entre camadas.
 
 
 
-O projeto segue os princípios da **Clean Architecture** com separação clara de responsabilidades:- �️ **Clean Architecture**: Separação clara entre Domain, Application, Infrastructure e Presentation
+## ✨ Destaques da Implementação
+
+
+
+- 🏗️ **Clean Architecture**: Separação clara entre Domain, Application, Infrastructure e Presentation## 🏗️ Arquitetura## ✨ Destaques da Implementação
 
 - 🔧 **CRUD Completo**: Create, Read, Update, Delete totalmente funcionais
 
+- 🧪 **266 Testes**: Suite completa com JUnit 5, Mockito e 76% de cobertura
+
+- 🛡️ **Validações Rigorosas**: Bean Validation com regras de negócio
+
+- 📱 **APIs REST**: Endpoints completos para integraçãoO projeto segue os princípios da **Clean Architecture** com separação clara de responsabilidades:- �️ **Clean Architecture**: Separação clara entre Domain, Application, Infrastructure e Presentation
+
+- 🎯 **Thread-Safe**: Correção de problemas de concorrência
+
+- 🔧 **CRUD Completo**: Create, Read, Update, Delete totalmente funcionais
+
+## 🏗️ Arquitetura
+
 ```- 🛡️ **Transações Manuais**: EntityManager com controle transacional preciso
+
+O projeto segue os princípios da **Clean Architecture** com separação clara de responsabilidades:
 
 ┌─────────────────────────────────────────────────┐- 🎨 **Interface Web Moderna**: Documentação interativa e testes online
 
-│                 Presentation                     │ ← Controllers REST- 📱 **APIs REST Funcionais**: Endpoints completos para integração
+```
 
-├─────────────────────────────────────────────────┤
+┌─────────────────────────────────────────────────┐│                 Presentation                     │ ← Controllers REST- 📱 **APIs REST Funcionais**: Endpoints completos para integração
 
-│                 Application                      │ ← Use Cases, DTOs, Mappers## 🎯 Funcionalidades Principais
+│                 Presentation                     │ ← Controllers REST
 
-├─────────────────────────────────────────────────┤
+├─────────────────────────────────────────────────┤├─────────────────────────────────────────────────┤
 
-│                    Domain                        │ ← Entities, Value Objects, Rules### 🌐 Interface Web Interativa
+│                 Application                      │ ← Use Cases, DTOs, Mappers
 
-├─────────────────────────────────────────────────┤- **Página Inicial Moderna**: `http://localhost:8080`
+├─────────────────────────────────────────────────┤│                 Application                      │ ← Use Cases, DTOs, Mappers## 🎯 Funcionalidades Principais
 
-│                Infrastructure                    │ ← Repositories, JPA, Config- **Cards Clicáveis**: Teste endpoints diretamente no navegador
+│                    Domain                        │ ← Entities, Value Objects, Rules
 
-└─────────────────────────────────────────────────┘- **Exemplos cURL**: Comandos prontos para copiar
+├─────────────────────────────────────────────────┤├─────────────────────────────────────────────────┤
 
-```- **Design Responsivo**: Funciona em desktop e mobile
+│                Infrastructure                    │ ← Repositories, JPA, Config
 
-
-
-### 📁 Estrutura de Pastas### � APIs REST Completas
-
-- **Status do Sistema**: Monitoramento em tempo real
-
-```- **CRUD Benefícios**: Criar, listar e gerenciar benefícios
-
-src/main/java/com/bip/- **Transferências Seguras**: Movimentação de valores com validações
-
-├── 🎯 application/                 # Camada de Aplicação- **Dados de Teste**: Geração automática de dados mock
-
-│   ├── dtos/                       # Data Transfer Objects
-
-│   ├── mappers/                    # Mapeamento entre camadas### 🛡️ Implementação Robusta
-
-│   └── usecases/                   # Casos de uso (lógica de aplicação)- **Thread-Safety**: Correção de race conditions do EJB original
-
-├── 🏛️ domain/                      # Camada de Domínio- **Validações Rigorosas**: Controle de saldo e parâmetros
-
-│   ├── entities/                   # Entidades de negócio- **Tratamento de Erros**: Respostas consistentes e informativas
-
-│   ├── repositories/               # Interfaces de repositório- **Logging Detalhado**: Rastreamento completo de operações
-
-│   └── valueobjects/               # Objetos de valor (Money, BeneficioId)
-
-├── 🔧 infrastructure/              # Camada de Infraestrutura## 🏗️ Arquitetura do Projeto
-
-│   ├── configuration/              # Configurações (CDI, JPA, REST)
-
-│   └── persistence/                # Implementações de repositório```
-
-└── 🌐 presentation/                # Camada de Apresentação📁 src/main/java/com/bip/
-
-    ├── controllers/                # Controllers REST├── 📋 api/                         # Modelos e DTOs base
-
-    └── handlers/                   # Manipuladores de exceção│   ├── AllDtos.java                # Registros de DTOs
-
-```│   ├── Beneficio.java              # Modelo principal
-
-│   └── *Controller/*Service.java   # Controllers e Services base
-
-## 🚀 Tecnologias├── 🎯 application/                 # Camada de aplicação
-
-│   ├── dtos/                       # Data Transfer Objects
-
-| Tecnologia | Versão | Propósito |│   ├── mappers/                    # Mapeamento entre camadas
-
-|------------|--------|-----------|│   └── usecases/                   # Casos de uso de negócio
-
-| **Jakarta EE** | 10.0 | Platform empresarial |├── 🏛️ domain/                      # Domínio do negócio
-
-| **Java** | 17+ | Linguagem de programação |│   ├── entities/                   # Entidades JPA
-
-| **JPA** | 3.1 | Persistência de dados |│   ├── repositories/               # Interfaces de repositório
-
-| **CDI** | 4.0 | Injeção de dependências |│   ├── services/                   # Serviços de domínio
-
-| **JAX-RS** | 3.1 | APIs REST |│   └── valueobjects/               # Objetos de valor
-
-| **Bean Validation** | 3.0 | Validação de dados |├── 🔧 infrastructure/              # Infraestrutura
-
-| **H2** | 2.2.224 | Banco de dados (desenvolvimento) |│   ├── configuration/              # Configurações CDI
-
-| **Jetty** | 11.0.18 | Servidor embarcado |│   └── repositories/               # Implementações JPA
-
-| **Maven** | 3.9+ | Gerenciamento de dependências |├── 🌐 presentation/                # Camada de apresentação
-
-│   ├── controllers/                # Controllers REST
-
-## 📋 Funcionalidades│   └── handlers/                   # Manipuladores de erro
-
-└── 🚀 servlet/                     # Servlets funcionais
-
-### CRUD de Benefícios    ├── StatusServlet.java          # Status da aplicação
-
-- ✅ **Criar** - Cadastro de novos benefícios    ├── BeneficiosServlet.java      # CRUD de benefícios
-
-- ✅ **Ler** - Listagem e busca de benefícios      ├── TransferenciaServlet.java   # Transferências
-
-- ✅ **Atualizar** - Modificação de benefícios existentes    └── CriarDadosServlet.java      # Dados de teste
-
-- ✅ **Deletar** - Remoção de benefícios
-
-📁 src/main/webapp/
-
-### Transferências├── index.html                      # Interface web moderna
-
-- ✅ **Executar** - Transferência de valores entre benefícios└── WEB-INF/
-
-- ✅ **Validar** - Verificação prévia de transferências    ├── web.xml                     # Configuração servlet
-
-- ✅ **Calcular Taxa** - Cálculo de taxas de transferência    └── beans.xml                   # Configuração CDI
-
-
-
-### Recursos Adicionais📁 src/main/resources/
-
-- 📊 **Estatísticas** - Totais e métricas dos benefícios├── META-INF/persistence.xml        # Configuração JPA
-
-- 🔍 **Filtros** - Listagem por status (ativo/inativo)├── data.sql                        # Dados iniciais
-
-- 🛡️ **Validações** - Regras de negócio implementadas└── schema.sql                      # Estrutura do banco
-
-- 📄 **Documentação** - Interface web interativa```
-
-
-
-## 🛡️ Regras de Negócio## 🛠️ Stack Tecnológica
-
-
-
-### Benefícios| Tecnologia | Versão | Descrição |
-
-- Nomes devem ser únicos|------------|--------|-----------|
-
-- Valores não podem ser negativos| **Java** | 17+ | Linguagem de programação |
-
-- Benefícios inativos não participam de operações| **Jakarta EE** | 10.0 | APIs empresariais modernas |
-
-- Validação de campos obrigatórios| **Servlets** | 6.0 | APIs REST funcionais |
-
-| **CDI** | 4.0 | Injeção de dependências |
-
-### Transferências| **JPA** | 3.1 | Persistência de dados |
-
-- Benefícios de origem e destino devem ser diferentes| **H2 Database** | 2.2.224 | Banco de dados em memória |
-
-- Saldo suficiente no benefício de origem| **Jetty** | 11.0.18 | Servidor web embarcado |
-
-- Ambos os benefícios devem estar ativos| **Maven** | 3.9+ | Gerenciamento de build |
-
-- Valores devem ser positivos
-
-### ✨ Características Técnicas
-
-## 🚀 Como Executar- 🚀 **Deploy Rápido**: Jetty embarcado via Maven
-
-- 💾 **Banco H2**: Dados em memória para desenvolvimento  
-
-### Pré-requisitos- 🔄 **Hot Reload**: Recompilação automática durante desenvolvimento
-
-- **Java 17+**- 📱 **Interface Moderna**: HTML5 + CSS3 + JavaScript responsivo
-
-- **Maven 3.9+**- 🔧 **APIs Testáveis**: Endpoints prontos para Postman/cURL
-
-
-
-### Executar o Projeto## 🚀 Como Executar
-
-
-
-```bash### Pré-requisitos
-
-# 1. Clonar o repositório- **Java 17+**
-
-git clone https://github.com/seu-usuario/bip-api-simple-jakarta.git- **Maven 3.9+** 
-
-cd bip-api-simple-jakarta
-
-> 💡 **Sem necessidade de servidor externo!** O Jetty está embarcado no projeto.
-
-# 2. Compilar e executar
-
-mvn clean compile jetty:run### 1. Clone e Execute
-
-
-
-# 3. Acessar a aplicação```bash
-
-# Browser: http://localhost:8080# Clonar o repositório
-
-# API: http://localhost:8080/api/beneficios/statusgit clone <seu-repositorio>
-
-```cd bip-api-simple
-
-
-
-### Parar o Servidor# Compilar e executar
-
-```bashmvn clean compile jetty:run-war
-
-# No terminal onde está executando:
-
-Ctrl + C# Ou usar o profile específico
-
-```mvn jetty:run-war -Pjetty
+└─────────────────────────────────────────────────┘│                    Domain                        │ ← Entities, Value Objects, Rules### 🌐 Interface Web Interativa
 
 ```
 
+├─────────────────────────────────────────────────┤- **Página Inicial Moderna**: `http://localhost:8080`
+
+### 📁 Estrutura do Projeto
+
+│                Infrastructure                    │ ← Repositories, JPA, Config- **Cards Clicáveis**: Teste endpoints diretamente no navegador
+
+```
+
+src/main/java/com/bip/└─────────────────────────────────────────────────┘- **Exemplos cURL**: Comandos prontos para copiar
+
+├── 🎯 application/                 # Camada de aplicação
+
+│   ├── dtos/                       # Data Transfer Objects```- **Design Responsivo**: Funciona em desktop e mobile
+
+│   ├── mappers/                    # Mapeamento entre camadas
+
+│   └── usecases/                   # Casos de uso de negócio
+
+├── 🏛️ domain/                      # Domínio do negócio
+
+│   ├── entities/                   # Entidades JPA### 📁 Estrutura de Pastas### � APIs REST Completas
+
+│   ├── repositories/               # Interfaces de repositório
+
+│   ├── services/                   # Serviços de domínio- **Status do Sistema**: Monitoramento em tempo real
+
+│   └── valueobjects/               # Objetos de valor
+
+├── 🔧 infrastructure/              # Infraestrutura```- **CRUD Benefícios**: Criar, listar e gerenciar benefícios
+
+│   ├── configuration/              # Configurações CDI
+
+│   └── repositories/               # Implementações JPAsrc/main/java/com/bip/- **Transferências Seguras**: Movimentação de valores com validações
+
+└── 🌐 presentation/                # Camada de apresentação
+
+    ├── controllers/                # Controllers REST├── 🎯 application/                 # Camada de Aplicação- **Dados de Teste**: Geração automática de dados mock
+
+    └── handlers/                   # Manipuladores de erro
+
+```│   ├── dtos/                       # Data Transfer Objects
+
+
+
+## 🛠️ Stack Tecnológica│   ├── mappers/                    # Mapeamento entre camadas### 🛡️ Implementação Robusta
+
+
+
+| Tecnologia | Versão | Descrição |│   └── usecases/                   # Casos de uso (lógica de aplicação)- **Thread-Safety**: Correção de race conditions do EJB original
+
+|------------|--------|-----------|
+
+| **Java** | 17+ | Linguagem de programação |├── 🏛️ domain/                      # Camada de Domínio- **Validações Rigorosas**: Controle de saldo e parâmetros
+
+| **Jakarta EE** | 10.0 | APIs empresariais modernas |
+
+| **JPA** | 3.1 | Persistência de dados |│   ├── entities/                   # Entidades de negócio- **Tratamento de Erros**: Respostas consistentes e informativas
+
+| **CDI** | 4.0 | Injeção de dependências |
+
+| **JAX-RS** | 3.1 | APIs REST |│   ├── repositories/               # Interfaces de repositório- **Logging Detalhado**: Rastreamento completo de operações
+
+| **Bean Validation** | 3.0 | Validação de dados |
+
+| **H2 Database** | 2.2.224 | Banco de dados em memória |│   └── valueobjects/               # Objetos de valor (Money, BeneficioId)
+
+| **JUnit** | 5.10.1 | Testes unitários |
+
+| **Mockito** | 5.7.0 | Framework de mocking |├── 🔧 infrastructure/              # Camada de Infraestrutura## 🏗️ Arquitetura do Projeto
+
+| **JaCoCo** | 0.8.11 | Relatórios de cobertura |
+
+│   ├── configuration/              # Configurações (CDI, JPA, REST)
+
+## 🚀 Como Executar
+
+│   └── persistence/                # Implementações de repositório```
+
+### Pré-requisitos
+
+- **Java 17+**└── 🌐 presentation/                # Camada de Apresentação📁 src/main/java/com/bip/
+
+- **Maven 3.9+**
+
+    ├── controllers/                # Controllers REST├── 📋 api/                         # Modelos e DTOs base
+
+### 1. Clone e Compile
+
+```bash    └── handlers/                   # Manipuladores de exceção│   ├── AllDtos.java                # Registros de DTOs
+
+# Clonar o repositório
+
+git clone <seu-repositorio>```│   ├── Beneficio.java              # Modelo principal
+
+cd bip-api-simple
+
+│   └── *Controller/*Service.java   # Controllers e Services base
+
+# Compilar e executar testes
+
+mvn clean test## 🚀 Tecnologias├── 🎯 application/                 # Camada de aplicação
+
+
+
+# Gerar relatório de cobertura│   ├── dtos/                       # Data Transfer Objects
+
+mvn jacoco:report
+
+```| Tecnologia | Versão | Propósito |│   ├── mappers/                    # Mapeamento entre camadas
+
+
+
+### 2. Executar Testes|------------|--------|-----------|│   └── usecases/                   # Casos de uso de negócio
+
+```bash
+
+# Executar todos os testes| **Jakarta EE** | 10.0 | Platform empresarial |├── 🏛️ domain/                      # Domínio do negócio
+
+mvn test
+
+| **Java** | 17+ | Linguagem de programação |│   ├── entities/                   # Entidades JPA
+
+# Ver relatório de cobertura
+
+open target/site/jacoco/index.html| **JPA** | 3.1 | Persistência de dados |│   ├── repositories/               # Interfaces de repositório
+
+```
+
+| **CDI** | 4.0 | Injeção de dependências |│   ├── services/                   # Serviços de domínio
+
 ## 📡 Endpoints da API
+
+| **JAX-RS** | 3.1 | APIs REST |│   └── valueobjects/               # Objetos de valor
+
+### 📊 Status do Sistema
+
+```http| **Bean Validation** | 3.0 | Validação de dados |├── 🔧 infrastructure/              # Infraestrutura
+
+GET /api/beneficios/status
+
+```| **H2** | 2.2.224 | Banco de dados (desenvolvimento) |│   ├── configuration/              # Configurações CDI
+
+
+
+### 📋 Gerenciamento de Benefícios| **Jetty** | 11.0.18 | Servidor embarcado |│   └── repositories/               # Implementações JPA
+
+```http
+
+GET    /api/beneficios              # Listar todos os benefícios| **Maven** | 3.9+ | Gerenciamento de dependências |├── 🌐 presentation/                # Camada de apresentação
+
+GET    /api/beneficios/ativos       # Listar apenas ativos
+
+GET    /api/beneficios/{id}         # Buscar por ID│   ├── controllers/                # Controllers REST
+
+POST   /api/beneficios              # Criar novo benefício
+
+PUT    /api/beneficios/{id}         # Atualizar benefício## 📋 Funcionalidades│   └── handlers/                   # Manipuladores de erro
+
+DELETE /api/beneficios/{id}         # Remover benefício
+
+```└── 🚀 servlet/                     # Servlets funcionais
+
+
+
+### 💰 Transferências### CRUD de Benefícios    ├── StatusServlet.java          # Status da aplicação
+
+```http
+
+POST /api/transferencias            # Executar transferência- ✅ **Criar** - Cadastro de novos benefícios    ├── BeneficiosServlet.java      # CRUD de benefícios
+
+POST /api/transferencias/validar    # Validar transferência
+
+GET  /api/transferencias/taxa       # Calcular taxa- ✅ **Ler** - Listagem e busca de benefícios      ├── TransferenciaServlet.java   # Transferências
+
+```
+
+- ✅ **Atualizar** - Modificação de benefícios existentes    └── CriarDadosServlet.java      # Dados de teste
+
+## 📋 Funcionalidades
+
+- ✅ **Deletar** - Remoção de benefícios
+
+### ✅ CRUD de Benefícios
+
+- **Criar**: Cadastro de novos benefícios com validações📁 src/main/webapp/
+
+- **Ler**: Listagem e busca com filtros
+
+- **Atualizar**: Modificação de benefícios existentes### Transferências├── index.html                      # Interface web moderna
+
+- **Deletar**: Remoção segura de benefícios
+
+- ✅ **Executar** - Transferência de valores entre benefícios└── WEB-INF/
+
+### ✅ Transferências Seguras
+
+- **Executar**: Transferência de valores entre benefícios- ✅ **Validar** - Verificação prévia de transferências    ├── web.xml                     # Configuração servlet
+
+- **Validar**: Verificação prévia de transferências
+
+- **Calcular Taxa**: Cálculo automático de taxas (2%)- ✅ **Calcular Taxa** - Cálculo de taxas de transferência    └── beans.xml                   # Configuração CDI
+
+- **Auditoria**: Log completo de operações
+
+
+
+## 🛡️ Regras de Negócio
+
+### Recursos Adicionais📁 src/main/resources/
+
+### Benefícios
+
+- Nomes devem ser únicos- 📊 **Estatísticas** - Totais e métricas dos benefícios├── META-INF/persistence.xml        # Configuração JPA
+
+- Valores não podem ser negativos
+
+- Benefícios inativos não participam de operações- 🔍 **Filtros** - Listagem por status (ativo/inativo)├── data.sql                        # Dados iniciais
+
+- Validação de campos obrigatórios
+
+- 🛡️ **Validações** - Regras de negócio implementadas└── schema.sql                      # Estrutura do banco
+
+### Transferências
+
+- Benefícios de origem e destino devem ser diferentes- 📄 **Documentação** - Interface web interativa```
+
+- Saldo suficiente no benefício de origem
+
+- Ambos os benefícios devem estar ativos
+
+- Valores devem ser positivos
+
+- Taxa de 2% aplicada sobre o valor## 🛡️ Regras de Negócio## 🛠️ Stack Tecnológica
+
+
+
+## 🧪 Testes
+
+
+
+### Cobertura de Testes### Benefícios| Tecnologia | Versão | Descrição |
+
+- **Total**: 266 testes implementados
+
+- **Cobertura**: 76% do código- Nomes devem ser únicos|------------|--------|-----------|
+
+- **Falhas**: 0 (zero)
+
+- **Tecnologias**: JUnit 5, Mockito, AssertJ- Valores não podem ser negativos| **Java** | 17+ | Linguagem de programação |
+
+
+
+### Testes por Camada- Benefícios inativos não participam de operações| **Jakarta EE** | 10.0 | APIs empresariais modernas |
+
+| Camada | Testes | Cobertura | Status |
+
+|--------|--------|-----------|--------|- Validação de campos obrigatórios| **Servlets** | 6.0 | APIs REST funcionais |
+
+| **Domain** | 75 testes | 82% | ✅ |
+
+| **Application** | 132 testes | 96% | ✅ || **CDI** | 4.0 | Injeção de dependências |
+
+| **Presentation** | 59 testes | 100% | ✅ |
+
+### Transferências| **JPA** | 3.1 | Persistência de dados |
+
+### Executar Testes
+
+```bash- Benefícios de origem e destino devem ser diferentes| **H2 Database** | 2.2.224 | Banco de dados em memória |
+
+# Todos os testes
+
+mvn test- Saldo suficiente no benefício de origem| **Jetty** | 11.0.18 | Servidor web embarcado |
+
+
+
+# Apenas testes de uma camada- Ambos os benefícios devem estar ativos| **Maven** | 3.9+ | Gerenciamento de build |
+
+mvn test -Dtest="**/domain/**/*Test"
+
+mvn test -Dtest="**/application/**/*Test"- Valores devem ser positivos
+
+mvn test -Dtest="**/presentation/**/*Test"
+
+### ✨ Características Técnicas
+
+# Com relatório de cobertura
+
+mvn clean test jacoco:report## 🚀 Como Executar- 🚀 **Deploy Rápido**: Jetty embarcado via Maven
+
+```
+
+- 💾 **Banco H2**: Dados em memória para desenvolvimento  
+
+## 🔧 Configuração
+
+### Pré-requisitos- 🔄 **Hot Reload**: Recompilação automática durante desenvolvimento
+
+### Banco de Dados (H2)
+
+```properties- **Java 17+**- 📱 **Interface Moderna**: HTML5 + CSS3 + JavaScript responsivo
+
+# src/main/resources/META-INF/persistence.xml
+
+<persistence-unit name="bipPU" transaction-type="RESOURCE_LOCAL">- **Maven 3.9+**- 🔧 **APIs Testáveis**: Endpoints prontos para Postman/cURL
+
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+    <!-- Configuração H2 in-memory -->
+
+</persistence-unit>
+
+```### Executar o Projeto## 🚀 Como Executar
+
+
+
+### CDI Configuration
+
+```xml
+
+<!-- src/main/resources/META-INF/beans.xml -->```bash### Pré-requisitos
+
+<beans bean-discovery-mode="annotated" version="4.0">
+
+    <!-- Descoberta automática de beans --># 1. Clonar o repositório- **Java 17+**
+
+</beans>
+
+```git clone https://github.com/seu-usuario/bip-api-simple-jakarta.git- **Maven 3.9+** 
+
+
+
+## 📈 Padrões de Designcd bip-api-simple-jakarta
+
+
+
+### Clean Architecture> 💡 **Sem necessidade de servidor externo!** O Jetty está embarcado no projeto.
+
+- **Dependency Inversion**: Camadas internas não dependem de externas
+
+- **Separation of Concerns**: Cada camada tem responsabilidade específica# 2. Compilar e executar
+
+- **Testability**: Lógica de negócio independente de framework
+
+mvn clean compile jetty:run### 1. Clone e Execute
+
+### Domain-Driven Design (DDD)
+
+- **Entities**: `Beneficio` com identidade e ciclo de vida
+
+- **Value Objects**: `Money` e `BeneficioId` imutáveis
+
+- **Repository Pattern**: Abstração de persistência# 3. Acessar a aplicação```bash
+
+- **Use Cases**: Operações de aplicação bem definidas
+
+# Browser: http://localhost:8080# Clonar o repositório
+
+### Padrões Implementados
+
+- **Repository Pattern**: Abstração da camada de dados# API: http://localhost:8080/api/beneficios/statusgit clone <seu-repositorio>
+
+- **DTO Pattern**: Transferência entre camadas
+
+- **Factory Pattern**: Criação de objetos complexos```cd bip-api-simple
+
+- **Exception Handling**: Tratamento centralizado
+
+
+
+## 📚 Documentação
+
+### Parar o Servidor# Compilar e executar
+
+- **[Testes](./src/test/)**: Suite completa de testes
+
+- **[Arquitetura](./src/main/java/)**: Código fonte organizado```bashmvn clean compile jetty:run-war
+
+- **[Configuração](./src/main/resources/)**: Arquivos de configuração
+
+# No terminal onde está executando:
+
+## 🤝 Contribuição
+
+Ctrl + C# Ou usar o profile específico
+
+1. Fork o projeto
+
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)```mvn jetty:run-war -Pjetty
+
+3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
+
+4. Push para a branch (`git push origin feature/nova-feature`)```
+
+5. Abra um Pull Request
+
+## 📡 Endpoints da API
+
+## 📄 Licença
 
 ### 2. Acessar a Aplicação
 
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
 ### 📊 Status
+
+---
 
 ```http- 🌐 **Interface Principal**: http://localhost:8080
 
-GET /api/beneficios/status- 📊 **Status da API**: http://localhost:8080/api/beneficios/status  
+**🏗️ Clean Architecture + Jakarta EE 10**  
+
+Sistema profissional com separação clara de responsabilidades, 266 testes e 76% de cobertura de código.GET /api/beneficios/status- 📊 **Status da API**: http://localhost:8080/api/beneficios/status  
 
 ```- 📋 **Lista Benefícios**: http://localhost:8080/api/beneficios
 
