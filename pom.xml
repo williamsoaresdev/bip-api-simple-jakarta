@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.bip</groupId>
+    <artifactId>bip-api-jakarta-ee</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    
+    <name>BIP API Jakarta EE</name>
+    <description>Sistema de Benefícios usando Jakarta EE com EJBs</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <!-- Jakarta EE Versions -->
+        <jakarta.ee.version>10.0.0</jakarta.ee.version>
+        <microprofile.version>6.0</microprofile.version>
+        
+        <!-- Database -->
+        <h2.version>2.2.224</h2.version>
+        <postgresql.version>42.7.1</postgresql.version>
+        
+        <!-- Testing -->
+        <junit.version>5.10.1</junit.version>
+        <arquillian.version>1.7.0.Alpha14</arquillian.version>
+        
+        <!-- Plugins -->
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+        <maven.failsafe.plugin.version>3.2.3</maven.failsafe.plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Jakarta EE BOM -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakarta.ee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            <!-- MicroProfile BOM -->
+            <dependency>
+                <groupId>org.eclipse.microprofile</groupId>
+                <artifactId>microprofile</artifactId>
+                <version>${microprofile.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            <!-- Arquillian BOM for Testing -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- ================================ -->
+        <!-- Jakarta EE Core APIs -->
+        <!-- ================================ -->
+        
+        <!-- EJB API -->
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- JPA API -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        
+        <!-- CDI API -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
+        
+        <!-- JAX-RS API -->
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+        </dependency>
+        
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- JSON-B API -->
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Bean Validation -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        
+        <!-- Transactions API -->
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ================================ -->
+        <!-- MicroProfile APIs -->
+        <!-- ================================ -->
+        
+        <!-- Health Check -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Metrics -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.metrics</groupId>
+            <artifactId>microprofile-metrics-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- OpenAPI -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Config -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ================================ -->
+        <!-- Database Drivers -->
+        <!-- ================================ -->
+        
+        <!-- H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- PostgreSQL (optional) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ================================ -->
+        <!-- Jakarta EE Implementations for Jetty -->
+        <!-- ================================ -->
+        
+        <!-- Jersey JAX-RS Implementation -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+
+        <!-- Weld CDI Implementation -->
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-shaded</artifactId>
+            <version>5.1.2.Final</version>
+        </dependency>
+
+        <!-- Hibernate JPA Implementation -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.4.Final</version>
+        </dependency>
+
+        <!-- Bean Validation Implementation -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.1.Final</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
+
+
+        <!-- ================================ -->
+        <!-- Testing Dependencies -->
+        <!-- ================================ -->
+        
+        <!-- JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Arquillian Core -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- ================================ -->
+        <!-- WildFly Profile -->
+        <!-- ================================ -->
+        <profile>
+            <id>wildfly</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <!-- WildFly Arquillian Adapter -->
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>5.0.1.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <!-- WildFly Maven Plugin -->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>4.2.1.Final</version>
+                        <configuration>
+                            <server-config>standalone-full.xml</server-config>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <!-- ================================ -->
+        <!-- Payara Profile -->
+        <!-- ================================ -->
+        <profile>
+            <id>payara</id>
+            <dependencies>
+                <!-- Payara Arquillian Adapter -->
+                <dependency>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>arquillian-payara-server-managed</artifactId>
+                    <version>3.0.alpha8</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <!-- Payara Maven Plugin -->
+                    <plugin>
+                        <groupId>fish.payara.maven.plugins</groupId>
+                        <artifactId>payara-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <configuration>
+                            <payaraHome>${payara.home}</payaraHome>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ================================ -->
+        <!-- Liberty Dev Profile -->
+        <!-- ================================ -->
+        <profile>
+            <id>liberty-dev</id>
+            <build>
+                <plugins>
+                    <!-- Liberty Maven Plugin -->
+                    <plugin>
+                        <groupId>io.openliberty.tools</groupId>
+                        <artifactId>liberty-maven-plugin</artifactId>
+                        <version>3.10.3</version>
+                        <configuration>
+                            <serverName>defaultServer</serverName>
+                            <bootstrapProperties>
+                                <http.port>8080</http.port>
+                                <https.port>8443</https.port>
+                            </bootstrapProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ================================ -->  
+        <!-- Jetty Embedded Profile -->
+        <!-- ================================ -->
+        <profile>
+            <id>jetty</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>11.0.18</version>
+                        <configuration>
+                            <httpConnector>
+                                <port>8080</port>
+                            </httpConnector>
+                            <webApp>
+                                <contextPath>/</contextPath>
+                            </webApp>
+                            <scanIntervalSeconds>10</scanIntervalSeconds>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>bip-api-jakarta-ee</finalName>
+        
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven WAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.plugin.version}</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven Failsafe Plugin for Integration Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven.failsafe.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

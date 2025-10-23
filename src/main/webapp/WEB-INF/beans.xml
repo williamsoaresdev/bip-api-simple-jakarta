@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+                           https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd"
+       version="4.0" 
+       bean-discovery-mode="all">
+    
+    <!-- 
+        CDI Configuration para Jakarta EE 10
+        
+        bean-discovery-mode="all": 
+        - Descoberta automática de todos os beans CDI
+        - Permite injeção de dependência em todas as classes
+    -->
+    
+    <!-- Interceptadores globais -->
+    <interceptors>
+        <!-- Adicione interceptadores personalizados aqui se necessário -->
+    </interceptors>
+    
+    <!-- Decorators globais -->
+    <decorators>
+        <!-- Adicione decorators personalizados aqui se necessário -->
+    </decorators>
+    
+    <!-- Alternativas globais -->
+    <alternatives>
+        <!-- Adicione implementações alternativas aqui se necessário -->
+    </alternatives>
+    
+</beans>
