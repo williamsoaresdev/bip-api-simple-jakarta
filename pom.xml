@@ -572,6 +572,13 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <!-- Exclusões de pacotes que não devem ser testados -->
+                            <excludes>
+                                <exclude>com/bip/infrastructure/configuration/**</exclude>
+                                <exclude>com/bip/infrastructure/persistence/**</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>check</id>
@@ -579,6 +586,10 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <exclude>com/bip/infrastructure/configuration/**</exclude>
+                                <exclude>com/bip/infrastructure/persistence/**</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
@@ -586,7 +597,7 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.60</minimum>
+                                            <minimum>0.95</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
