@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("BeneficioId Value Object Tests")
@@ -37,6 +40,22 @@ class BeneficioIdTest {
         // Then
         assertThat(beneficioId.getId()).isEqualTo(id);
         assertThat(beneficioId.isValid()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve criar BeneficioId usando construtor padrão (JPA)")
+    void deveCriarBeneficioIdUsandoConstrutorPadrao() throws Exception {
+        // Given - Usar reflection para acessar construtor protected
+        Constructor<BeneficioId> constructor = BeneficioId.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        // When
+        BeneficioId beneficioId = constructor.newInstance();
+
+        // Then
+        assertThat(beneficioId).isNotNull();
+        assertThat(beneficioId.getId()).isNull();
+        assertThat(beneficioId.isValid()).isFalse();
     }
 
     @Test
@@ -77,6 +96,61 @@ class BeneficioIdTest {
         // Then
         assertThat(beneficioId.getId()).isEqualTo(id);
         assertThat(beneficioId.isValid()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve definir ID usando setter com valor válido (JPA)")
+    void deveDefinirIdUsandoSetterComValorValido() throws Exception {
+        // Given
+        Constructor<BeneficioId> constructor = BeneficioId.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        BeneficioId beneficioId = constructor.newInstance();
+
+        Method setIdMethod = BeneficioId.class.getDeclaredMethod("setId", Long.class);
+        setIdMethod.setAccessible(true);
+
+        Long novoId = 999L;
+
+        // When
+        setIdMethod.invoke(beneficioId, novoId);
+
+        // Then
+        assertThat(beneficioId.getId()).isEqualTo(novoId);
+        assertThat(beneficioId.isValid()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao definir ID nulo usando setter (JPA)")
+    void deveFalharAoDefinirIdNuloUsandoSetter() throws Exception {
+        // Given
+        Constructor<BeneficioId> constructor = BeneficioId.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        BeneficioId beneficioId = constructor.newInstance();
+
+        Method setIdMethod = BeneficioId.class.getDeclaredMethod("setId", Long.class);
+        setIdMethod.setAccessible(true);
+
+        // When & Then
+        assertThatThrownBy(() -> setIdMethod.invoke(beneficioId, (Object) null))
+                .hasCauseInstanceOf(IllegalArgumentException.class)
+                .hasRootCauseMessage("ID do benefício não pode ser nulo");
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao definir ID inválido usando setter (JPA)")
+    void deveFalharAoDefinirIdInvalidoUsandoSetter() throws Exception {
+        // Given
+        Constructor<BeneficioId> constructor = BeneficioId.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        BeneficioId beneficioId = constructor.newInstance();
+
+        Method setIdMethod = BeneficioId.class.getDeclaredMethod("setId", Long.class);
+        setIdMethod.setAccessible(true);
+
+        // When & Then
+        assertThatThrownBy(() -> setIdMethod.invoke(beneficioId, -10L))
+                .hasCauseInstanceOf(IllegalArgumentException.class)
+                .hasRootCauseMessage("ID do benefício deve ser positivo: -10");
     }
 
     @Test

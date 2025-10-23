@@ -416,6 +416,37 @@ class BeneficioUseCaseTest {
             verify(repository, never()).save(any());
             verifyNoInteractions(mapper);
         }
+
+        @Test
+        @DisplayName("Deve lançar exceção ao tentar atualizar com nome já existente em outro benefício")
+        void deveLancarExcecaoAoTentarAtualizarComNomeJaExistente() {
+            // Arrange
+            Long id = 1L;
+            String nomeExistente = "Vale Alimentação";
+            String nomeOriginal = "Vale Refeição";
+            
+            // Benefício existente com nome diferente
+            Beneficio beneficioExistente = Beneficio.criar(nomeOriginal, "Descrição", Money.of(new BigDecimal("100.00")));
+            
+            // DTO com nome que já existe em outro benefício
+            AtualizarBeneficioDto dto = new AtualizarBeneficioDto();
+            dto.setNome(nomeExistente);
+            dto.setDescricao("Nova descrição");
+            dto.setValorInicial(new BigDecimal("150.00"));
+
+            when(repository.findById(id)).thenReturn(Optional.of(beneficioExistente));
+            when(repository.existsByNome(nomeExistente)).thenReturn(true);
+
+            // Act & Assert
+            assertThatThrownBy(() -> useCase.atualizar(id, dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Já existe benefício com o nome: " + nomeExistente);
+
+            verify(repository).findById(id);
+            verify(repository).existsByNome(nomeExistente);
+            verify(repository, never()).save(any());
+            verifyNoInteractions(mapper);
+        }
     }
 
     @Nested

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
@@ -287,5 +289,110 @@ class MoneyTest {
         assertThat(money1.compareTo(money2)).isLessThan(0);
         assertThat(money2.compareTo(money1)).isGreaterThan(0);
         assertThat(money1.compareTo(money3)).isEqualTo(0);
+    }
+
+    // ========== TESTES ADICIONAIS PARA 100% COBERTURA ==========
+
+    @Test
+    @DisplayName("Deve criar Money com construtor padrão usando reflexão")
+    void deveCriarMoneyComConstrutorPadraoUsandoReflexao() throws Exception {
+        // Given - Acesso ao construtor protegido via reflexão
+        Constructor<Money> constructor = Money.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        
+        // When
+        Money money = constructor.newInstance();
+        
+        // Then
+        assertThat(money).isNotNull();
+        assertThat(money.getValor()).isEqualByComparingTo(BigDecimal.ZERO);
+    }
+
+    @Test
+    @DisplayName("Deve usar setValor com reflexão para JPA")
+    void deveUsarSetValorComReflexaoParaJPA() throws Exception {
+        // Given
+        Money money = new Money(new BigDecimal("100.00"));
+        Method setValorMethod = Money.class.getDeclaredMethod("setValor", BigDecimal.class);
+        setValorMethod.setAccessible(true);
+        
+        // When
+        setValorMethod.invoke(money, new BigDecimal("200.00"));
+        
+        // Then
+        assertThat(money.getValor()).isEqualByComparingTo(new BigDecimal("200.00"));
+    }
+
+    @Test
+    @DisplayName("Deve criar Money com construtor double")
+    void deveCriarMoneyComConstrutorDouble() {
+        // Given
+        double valor = 123.45;
+        
+        // When
+        Money money = new Money(valor);
+        
+        // Then
+        assertThat(money.getValor()).isEqualByComparingTo(new BigDecimal("123.45"));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção para construtor double com valor negativo")
+    void deveLancarExcecaoParaConstrutorDoubleComValorNegativo() {
+        // Given
+        double valorNegativo = -100.0;
+        
+        // When & Then
+        assertThatThrownBy(() -> new Money(valorNegativo))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Valor monetário não pode ser negativo");
+    }
+
+    @Test
+    @DisplayName("Deve criar Money usando factory method of(double)")
+    void deveCriarMoneyUsandoFactoryMethodOfDouble() {
+        // Given
+        double valor = 99.99;
+        
+        // When
+        Money money = Money.of(valor);
+        
+        // Then
+        assertThat(money.getValor()).isEqualByComparingTo(new BigDecimal("99.99"));
+    }
+
+    @Test
+    @DisplayName("Deve verificar se valor é negativo - sempre false para Money válido")
+    void deveVerificarSeValorEhNegativo() {
+        // Given
+        Money zero = Money.zero();
+        Money positivo = new Money(new BigDecimal("10.00"));
+        
+        // When & Then - Money válido nunca pode ser negativo
+        assertThat(zero.isNegative()).isFalse();
+        assertThat(positivo.isNegative()).isFalse();
+        
+        // When & Then - Construção com valor negativo deve falhar
+        assertThatThrownBy(() -> new Money(new BigDecimal("-10.00")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Valor monetário não pode ser negativo");
+    }
+
+    @Test
+    @DisplayName("Deve completar cobertura do equals - comparação com null e diferentes tipos")
+    void deveCompletarCoberturaDoEquals() {
+        // Given
+        Money money = new Money(new BigDecimal("100.00"));
+        
+        // When & Then - Teste com null
+        assertThat(money).isNotEqualTo(null);
+        
+        // When & Then - Teste com objeto de tipo diferente
+        assertThat(money).isNotEqualTo("100.00");
+        assertThat(money).isNotEqualTo(100);
+        
+        // When & Then - Teste com Money diferente
+        Money diferente = new Money(new BigDecimal("200.00"));
+        assertThat(money).isNotEqualTo(diferente);
     }
 }

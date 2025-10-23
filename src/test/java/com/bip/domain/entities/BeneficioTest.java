@@ -405,4 +405,243 @@ class BeneficioTest {
         // Then
         assertThat(beneficio.getCriadoEm()).isEqualTo(criadoEm);
     }
+
+    @Test
+    @DisplayName("Deve usar construtor padrão para JPA")
+    void deveUsarConstrutorPadraoParaJPA() {
+        // When
+        Beneficio beneficio = new Beneficio();
+        
+        // Then
+        assertThat(beneficio).isNotNull();
+        assertThat(beneficio.getNome()).isNull();
+        assertThat(beneficio.getDescricao()).isNull();
+        assertThat(beneficio.getSaldo()).isEqualTo(Money.zero()); // Construtor inicializa com zero
+        assertThat(beneficio.getAtivo()).isTrue(); // Campo tem valor padrão TRUE
+        assertThat(beneficio.getCriadoEm()).isNull(); // Será definido pelo @PrePersist
+        assertThat(beneficio.getAtualizadoEm()).isNull(); // Será definido pelo @PrePersist
+    }
+
+    @Test
+    @DisplayName("Deve obter valor como BigDecimal (método deprecated)")
+    void deveObterValorComoBigDecimal() {
+        // Given
+        Money valor = Money.of(new BigDecimal("150.75"));
+        Beneficio beneficio = Beneficio.criar("Nome", "Desc", valor);
+        
+        // When
+        @SuppressWarnings("removal")
+        BigDecimal valorBigDecimal = beneficio.getValor();
+        
+        // Then
+        assertThat(valorBigDecimal).isEqualTo(new BigDecimal("150.75"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar ZERO quando saldo for Money.zero")
+    void deveRetornarZeroQuandoSaldoForMoneyZero() {
+        // Given
+        Beneficio beneficio = new Beneficio(); // Construtor inicializa com Money.zero()
+        
+        // When
+        @SuppressWarnings("removal")
+        BigDecimal valor = beneficio.getValor();
+        
+        // Then
+        assertThat(valor).isEqualByComparingTo(BigDecimal.ZERO); // Usa comparação numerica
+    }
+
+    @Test
+    @DisplayName("Deve definir ativo diretamente (método deprecated)")
+    void deveDefinirAtivoDiretamente() {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // When & Then - Teste do método deprecated setAtivo
+        setAtivoDeprecated(beneficio, true);
+        assertThat(beneficio.getAtivo()).isTrue();
+        
+        setAtivoDeprecated(beneficio, false);
+        assertThat(beneficio.getAtivo()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Deve definir valor como BigDecimal (método deprecated)")
+    void deveDefinirValorComoBigDecimal() {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        BigDecimal valor = new BigDecimal("200.50");
+        
+        // When
+        setValorDeprecated(beneficio, valor);
+        
+        // Then
+        @SuppressWarnings("removal")
+        BigDecimal valorObtido = beneficio.getValor();
+        assertThat(valorObtido).isEqualTo(valor);
+        assertThat(beneficio.getSaldo()).isEqualTo(Money.of(valor));
+    }
+
+    @Test
+    @DisplayName("Deve definir valor null como zero (método deprecated)")
+    void deveDefinirValorNullComoZero() {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // When
+        setValorDeprecated(beneficio, null);
+        
+        // Then
+        @SuppressWarnings("removal")
+        BigDecimal valorObtido = beneficio.getValor();
+        assertThat(valorObtido).isEqualByComparingTo(BigDecimal.ZERO); // Usa comparação numérica
+        assertThat(beneficio.getSaldo()).isEqualTo(Money.zero());
+    }
+
+    // Métodos auxiliares para testar métodos deprecated
+    @SuppressWarnings("removal")
+    private void setAtivoDeprecated(Beneficio beneficio, Boolean ativo) {
+        beneficio.setAtivo(ativo);
+    }
+
+    @SuppressWarnings("removal")
+    private void setValorDeprecated(Beneficio beneficio, BigDecimal valor) {
+        beneficio.setValor(valor);
+    }
+
+    @Test
+    @DisplayName("Deve simular callback onCreate do JPA")
+    void deveSimularCallbackOnCreateDoJPA() throws Exception {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // When - Simular o que o JPA faz ao chamar @PrePersist
+        java.lang.reflect.Method onCreate = Beneficio.class.getDeclaredMethod("onCreate");
+        onCreate.setAccessible(true);
+        onCreate.invoke(beneficio);
+        
+        // Then
+        assertThat(beneficio.getCriadoEm()).isNotNull();
+        assertThat(beneficio.getAtualizadoEm()).isNotNull();
+        assertThat(beneficio.getSaldo()).isEqualTo(Money.zero());
+        assertThat(beneficio.getAtivo()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Deve simular callback onUpdate do JPA")
+    void deveSimularCallbackOnUpdateDoJPA() throws Exception {
+        // Given
+        Beneficio beneficio = Beneficio.criar("Nome", "Desc", Money.of(new BigDecimal("100.00")));
+        LocalDateTime criadoEm = beneficio.getCriadoEm();
+        LocalDateTime primeiraAtualizacao = beneficio.getAtualizadoEm();
+        
+        Thread.sleep(10); // Pequena pausa para garantir diferença no timestamp
+        
+        // When - Simular o que o JPA faz ao chamar @PreUpdate
+        java.lang.reflect.Method onUpdate = Beneficio.class.getDeclaredMethod("onUpdate");
+        onUpdate.setAccessible(true);
+        onUpdate.invoke(beneficio);
+        
+        // Then
+        assertThat(beneficio.getCriadoEm()).isEqualTo(criadoEm); // Não deve mudar
+        assertThat(beneficio.getAtualizadoEm()).isAfter(primeiraAtualizacao); // Deve ser atualizado
+    }
+
+    @Test
+    @DisplayName("Deve não sobrescrever criadoEm se já estiver definido no onCreate")
+    void deveNaoSobrescreverCriadoEmSeJaEstiverDefinido() throws Exception {
+        // Given
+        Beneficio beneficio = Beneficio.criar("Nome", "Desc", Money.of(new BigDecimal("100.00")));
+        LocalDateTime criadoEmOriginal = beneficio.getCriadoEm();
+        
+        Thread.sleep(10);
+        
+        // When - Simular o que o JPA faz ao chamar @PrePersist novamente
+        java.lang.reflect.Method onCreate = Beneficio.class.getDeclaredMethod("onCreate");
+        onCreate.setAccessible(true);
+        onCreate.invoke(beneficio);
+        
+        // Then
+        assertThat(beneficio.getCriadoEm()).isEqualTo(criadoEmOriginal); // Não deve mudar
+    }
+
+    @Test
+    @DisplayName("onCreate deve manter ativo e saldo se já preenchidos")
+    void onCreateDeveMaterCamposSeJaPreenchidos() throws Exception {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // Usar reflection para definir campos privados
+        java.lang.reflect.Field ativoField = Beneficio.class.getDeclaredField("ativo");
+        ativoField.setAccessible(true);
+        ativoField.set(beneficio, Boolean.FALSE);
+        
+        java.lang.reflect.Field saldoField = Beneficio.class.getDeclaredField("saldo");
+        saldoField.setAccessible(true);
+        saldoField.set(beneficio, Money.of(new BigDecimal("250.00")));
+        
+        java.lang.reflect.Field criadoEmField = Beneficio.class.getDeclaredField("criadoEm");
+        criadoEmField.setAccessible(true);
+        criadoEmField.set(beneficio, LocalDateTime.now().minusHours(1));
+        
+        // When
+        java.lang.reflect.Method onCreate = Beneficio.class.getDeclaredMethod("onCreate");
+        onCreate.setAccessible(true);
+        onCreate.invoke(beneficio);
+        
+        // Then
+        assertThat(beneficio.getAtivo()).isEqualTo(Boolean.FALSE); // Não deve alterar
+        assertThat(beneficio.getSaldo().getValor()).isEqualByComparingTo(new BigDecimal("250.00")); // Não deve alterar
+        assertThat(beneficio.getCriadoEm()).isBefore(beneficio.getAtualizadoEm()); // Mas atualizadoEm deve ser atual
+    }
+
+    @Test
+    @DisplayName("onCreate deve definir valores padrão quando campos são null")
+    void onCreateDeveDefinirValoresPadraoQuandoCamposSaoNull() throws Exception {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // Usar reflection para garantir que campos estão null
+        java.lang.reflect.Field ativoField = Beneficio.class.getDeclaredField("ativo");
+        ativoField.setAccessible(true);
+        ativoField.set(beneficio, null); // Força como null
+        
+        java.lang.reflect.Field saldoField = Beneficio.class.getDeclaredField("saldo");
+        saldoField.setAccessible(true);
+        saldoField.set(beneficio, null); // Força como null
+        
+        java.lang.reflect.Field criadoEmField = Beneficio.class.getDeclaredField("criadoEm");
+        criadoEmField.setAccessible(true);
+        criadoEmField.set(beneficio, null); // Força como null
+        
+        // When
+        java.lang.reflect.Method onCreate = Beneficio.class.getDeclaredMethod("onCreate");
+        onCreate.setAccessible(true);
+        onCreate.invoke(beneficio);
+        
+        // Then
+        assertThat(beneficio.getAtivo()).isEqualTo(Boolean.TRUE); // Deve definir TRUE
+        assertThat(beneficio.getSaldo().getValor()).isEqualByComparingTo(BigDecimal.ZERO); // Deve definir ZERO
+        assertThat(beneficio.getCriadoEm()).isNotNull(); // Deve definir data
+        assertThat(beneficio.getAtualizadoEm()).isNotNull(); // Deve definir data
+    }
+
+    @Test
+    @DisplayName("getValor deve retornar ZERO quando saldo é null")
+    void getValorDeveRetornarZeroQuandoSaldoNull() throws Exception {
+        // Given
+        Beneficio beneficio = new Beneficio();
+        
+        // Usar reflection para definir saldo como null
+        java.lang.reflect.Field saldoField = Beneficio.class.getDeclaredField("saldo");
+        saldoField.setAccessible(true);
+        saldoField.set(beneficio, null);
+        
+        // When
+        @SuppressWarnings("removal")
+        BigDecimal valor = beneficio.getValor();
+        
+        // Then
+        assertThat(valor).isEqualByComparingTo(BigDecimal.ZERO);
+    }
 }
