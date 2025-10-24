@@ -1,0 +1,612 @@
+{
+	"info": {
+		"_postman_id": "bip-api-collection-2025",
+		"name": "BIP API - Coleção Completa",
+		"description": "Coleção completa da API BIP com todos os endpoints para benefícios e transferências.\n\n**Base URL:** http://localhost:8080/api\n\n**Funcionalidades:**\n- Gerenciamento de benefícios (CRUD)\n- Sistema de transferências entre benefícios\n- Validação de transferências\n- Cálculo de taxas\n- Estatísticas dos benefícios\n\n**Última atualização:** 24/10/2025",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "bip-api-team"
+	},
+	"item": [
+		{
+			"name": "🏠 Status & Health Check",
+			"item": [
+				{
+					"name": "Status da API",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"status"
+							]
+						},
+						"description": "Verifica o status da API e lista todos os endpoints disponíveis."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para verificar o status e saúde da API"
+		},
+		{
+			"name": "💰 Benefícios",
+			"item": [
+				{
+					"name": "Listar Todos os Benefícios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios"
+							]
+						},
+						"description": "Retorna todos os benefícios cadastrados no sistema, ativos e inativos."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Benefícios Ativos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/ativos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"ativos"
+							]
+						},
+						"description": "Retorna apenas os benefícios que estão ativos no sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Benefício por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/{{beneficioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"{{beneficioId}}"
+							]
+						},
+						"description": "Busca um benefício específico pelo seu ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Novo Benefício",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Vale Alimentação\",\n  \"descricao\": \"Benefício para compra de alimentos\",\n  \"valorInicial\": 500.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/beneficios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios"
+							]
+						},
+						"description": "Cria um novo benefício no sistema.\n\n**Campos obrigatórios:**\n- nome (3-100 caracteres)\n- valorInicial (maior ou igual a 0)\n\n**Campos opcionais:**\n- descricao (até 500 caracteres)"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Benefício",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Vale Alimentação Premium\",\n  \"descricao\": \"Benefício premium para compra de alimentos orgânicos\",\n  \"valorInicial\": 750.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/{{beneficioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"{{beneficioId}}"
+							]
+						},
+						"description": "Atualiza um benefício existente.\n\n**Validações:**\n- nome: 3-100 caracteres (obrigatório)\n- descricao: até 500 caracteres\n- valorInicial: maior que zero"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Benefício",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/{{beneficioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"{{beneficioId}}"
+							]
+						},
+						"description": "Remove um benefício do sistema. Esta ação é irreversível."
+					},
+					"response": []
+				},
+				{
+					"name": "Estatísticas dos Benefícios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/beneficios/estatisticas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"beneficios",
+								"estatisticas"
+							]
+						},
+						"description": "Retorna estatísticas dos benefícios:\n- Total de benefícios ativos\n- Soma total dos valores dos benefícios ativos\n- Timestamp da consulta"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento completo de benefícios (CRUD)"
+		},
+		{
+			"name": "🔄 Transferências",
+			"item": [
+				{
+					"name": "Executar Transferência",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 2,\n  \"valor\": 100.00,\n  \"descricao\": \"Transferência de saldo entre benefícios\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transferencias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transferencias"
+							]
+						},
+						"description": "Executa uma transferência entre dois benefícios.\n\n**Campos obrigatórios:**\n- beneficioOrigemId (ID positivo)\n- beneficioDestinoId (ID positivo)\n- valor (maior que 0.01)\n\n**Campos opcionais:**\n- descricao (até 500 caracteres)\n\n**Validações:**\n- Benefícios devem existir e estar ativos\n- Saldo suficiente no benefício de origem\n- IDs origem e destino devem ser diferentes"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Transferência",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 2,\n  \"valor\": 100.00,\n  \"descricao\": \"Validação de transferência\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transferencias/validar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transferencias",
+								"validar"
+							]
+						},
+						"description": "Valida se uma transferência pode ser executada sem efetivamente realizá-la.\n\nRetorna:\n- valida: true/false\n- motivo: explicação caso não seja válida\n- dados da transferência validada"
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Taxa de Transferência",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transferencias/taxa?valor=100.00",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transferencias",
+								"taxa"
+							],
+							"query": [
+								{
+									"key": "valor",
+									"value": "100.00",
+									"description": "Valor para calcular a taxa"
+								}
+							]
+						},
+						"description": "Calcula a taxa que será cobrada para uma transferência baseada no valor.\n\n**Parâmetros:**\n- valor: valor da transferência (obrigatório, maior que 0)\n\n**Retorna:**\n- valorOriginal: valor informado\n- taxa: valor da taxa calculada\n- valorComTaxa: valor total com a taxa incluída"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para operações de transferência entre benefícios"
+		},
+		{
+			"name": "🧪 Cenários de Teste",
+			"item": [
+				{
+					"name": "Teste Completo - Criar e Transferir",
+					"item": [
+						{
+							"name": "1. Criar Benefício Origem",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nome\": \"Vale Refeição\",\n  \"descricao\": \"Benefício para almoço\",\n  \"valorInicial\": 1000.00\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/beneficios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"beneficios"
+									]
+								}
+							}
+						},
+						{
+							"name": "2. Criar Benefício Destino",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nome\": \"Vale Transporte\",\n  \"descricao\": \"Benefício para transporte\",\n  \"valorInicial\": 200.00\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/beneficios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"beneficios"
+									]
+								}
+							}
+						},
+						{
+							"name": "3. Validar Transferência",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 2,\n  \"valor\": 150.00,\n  \"descricao\": \"Teste de transferência\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/transferencias/validar",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"transferencias",
+										"validar"
+									]
+								}
+							}
+						},
+						{
+							"name": "4. Executar Transferência",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 2,\n  \"valor\": 150.00,\n  \"descricao\": \"Transferência de teste realizada\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/transferencias",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"transferencias"
+									]
+								}
+							}
+						},
+						{
+							"name": "5. Verificar Saldos Atualizados",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/beneficios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"beneficios"
+									]
+								}
+							}
+						}
+					],
+					"description": "Sequência completa de testes para demonstrar o fluxo da aplicação"
+				},
+				{
+					"name": "Teste de Validações",
+					"item": [
+						{
+							"name": "Criar Benefício com Dados Inválidos",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"nome\": \"AB\",\n  \"descricao\": \"\",\n  \"valorInicial\": -100.00\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/beneficios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"beneficios"
+									]
+								},
+								"description": "Teste com dados inválidos:\n- Nome muito curto (menos de 3 caracteres)\n- Valor inicial negativo"
+							}
+						},
+						{
+							"name": "Buscar Benefício Inexistente",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/beneficios/99999",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"beneficios",
+										"99999"
+									]
+								},
+								"description": "Teste para ID que não existe no sistema"
+							}
+						},
+						{
+							"name": "Transferência com Saldo Insuficiente",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 2,\n  \"valor\": 999999.00,\n  \"descricao\": \"Teste de saldo insuficiente\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/transferencias",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"transferencias"
+									]
+								},
+								"description": "Teste de transferência com valor maior que o saldo disponível"
+							}
+						},
+						{
+							"name": "Transferência para Mesmo Benefício",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"beneficioOrigemId\": 1,\n  \"beneficioDestinoId\": 1,\n  \"valor\": 50.00,\n  \"descricao\": \"Teste de transferência para o mesmo benefício\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/transferencias",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"transferencias"
+									]
+								},
+								"description": "Teste com origem e destino iguais (deve falhar)"
+							}
+						}
+					],
+					"description": "Testes para validar o comportamento com dados inválidos"
+				}
+			],
+			"description": "Cenários de teste completos e validações"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Log da requisição",
+					"console.log('🚀 Executando:', pm.info.requestName);",
+					"console.log('📍 URL:', pm.request.url);",
+					"console.log('⏰ Timestamp:', new Date().toISOString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Testes globais para todas as requisições",
+					"pm.test('Status code válido', function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 400, 404, 500]);",
+					"});",
+					"",
+					"pm.test('Response time aceitável', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"pm.test('Content-Type é JSON para respostas com corpo', function () {",
+					"    if (pm.response.code !== 204) {",
+					"        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+					"    }",
+					"});",
+					"",
+					"// Log da resposta",
+					"console.log('✅ Resposta:', pm.response.code, pm.response.status);",
+					"console.log('⏱️ Tempo:', pm.response.responseTime + 'ms');"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "beneficioId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

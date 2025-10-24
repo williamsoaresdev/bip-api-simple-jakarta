@@ -172,6 +172,7 @@ echo "• CheckStyle: target/site/checkstyle.html"
 echo "• PMD: target/site/pmd.html"
 echo "• SpotBugs: target/site/spotbugs.html"
 echo "• Site completo: target/site/index.html"
+echo "• Configurações: config/quality/"
 
 echo ""
 if [ $TESTS_RESULT -eq 0 ] && [ $COVERAGE_CHECK -eq 0 ]; then

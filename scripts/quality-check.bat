@@ -145,6 +145,7 @@ echo • CheckStyle: target\site\checkstyle.html
 echo • PMD: target\site\pmd.html
 echo • SpotBugs: target\site\spotbugs.html
 echo • Site completo: target\site\index.html
+echo • Configurações: config\quality\
 
 echo.
 if %TESTS_RESULT% equ 0 if %COVERAGE_CHECK% equ 0 (

@@ -675,7 +675,7 @@
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <version>3.3.1</version>
                         <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
+                            <configLocation>config/quality/checkstyle.xml</configLocation>
                         </configuration>
                         <reportSets>
                             <reportSet>
@@ -693,7 +693,7 @@
                         <version>${pmd.version}</version>
                         <configuration>
                             <rulesets>
-                                <ruleset>pmd-ruleset.xml</ruleset>
+                                <ruleset>config/quality/pmd-ruleset.xml</ruleset>
                             </rulesets>
                         </configuration>
                         <reportSets>
@@ -712,7 +712,7 @@
                         <artifactId>spotbugs-maven-plugin</artifactId>
                         <version>${spotbugs.version}</version>
                         <configuration>
-                            <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+                            <excludeFilterFile>config/quality/spotbugs-exclude.xml</excludeFilterFile>
                         </configuration>
                     </plugin>
 
@@ -903,7 +903,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <configLocation>config/quality/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
                     <linkXRef>false</linkXRef>
@@ -927,7 +927,7 @@
                 <version>${pmd.version}</version>
                 <configuration>
                     <rulesets>
-                        <ruleset>pmd-ruleset.xml</ruleset>
+                        <ruleset>config/quality/pmd-ruleset.xml</ruleset>
                     </rulesets>
                     <failOnViolation>false</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
@@ -962,7 +962,7 @@
                     <threshold>Medium</threshold>
                     <failOnError>false</failOnError>
                     <includeTests>false</includeTests>
-                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>config/quality/spotbugs-exclude.xml</excludeFilterFile>
                     <plugins>
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>
