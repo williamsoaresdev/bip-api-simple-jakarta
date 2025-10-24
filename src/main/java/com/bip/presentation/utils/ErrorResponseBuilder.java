@@ -80,8 +80,8 @@ public class ErrorResponseBuilder {
                                      final String errorMessage, 
                                      final String details) {
         final Map<String, Object> erro = new ConcurrentHashMap<>();
-        erro.put("erro", errorMessage);
-        erro.put("detalhes", details);
+        erro.put("erro", errorMessage != null ? errorMessage : "Erro não especificado");
+        erro.put("detalhes", details != null ? details : "Detalhes não disponíveis");
         
         return Response.status(status).entity(erro).build();
     }

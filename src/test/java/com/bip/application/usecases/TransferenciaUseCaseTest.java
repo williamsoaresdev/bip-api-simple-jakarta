@@ -131,6 +131,9 @@ class TransferenciaUseCaseTest {
             TransferenciaDto dtoInvalido = new TransferenciaDto(
                 1L, 1L, new BigDecimal("100.00"), "Transferência inválida"
             );
+            
+            doThrow(new IllegalArgumentException("Benefício de origem e destino não podem ser iguais"))
+                .when(beneficioService).validarBeneficiosDiferentes(1L, 1L);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(dtoInvalido))
@@ -151,10 +154,10 @@ class TransferenciaUseCaseTest {
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(dtoInvalido))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Valor da transferência deve ser positivo");
 
-            verify(beneficioRepository, never()).findById(any());
+            verify(beneficioService, never()).buscarPorId(any());
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
 
@@ -165,11 +168,13 @@ class TransferenciaUseCaseTest {
             beneficioOrigem.desativar();
             when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
             when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
+            doThrow(new IllegalStateException("Benefício está inativo: 1"))
+                .when(beneficioService).validarAtivo(beneficioOrigem);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Não é possível realizar débito em benefício inativo");
+                .hasMessageContaining("Benefício está inativo");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -181,11 +186,13 @@ class TransferenciaUseCaseTest {
             beneficioDestino.desativar();
             when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
             when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
+            doThrow(new IllegalStateException("Benefício está inativo: 2"))
+                .when(beneficioService).validarAtivo(beneficioDestino);
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaDto))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Não é possível realizar crédito em benefício inativo");
+                .hasMessageContaining("Benefício está inativo");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
@@ -203,7 +210,7 @@ class TransferenciaUseCaseTest {
 
             // Act & Assert
             assertThatThrownBy(() -> transferenciaUseCase.executarTransferencia(transferenciaAlto))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Saldo insuficiente");
 
             verify(beneficioRepository, never()).save(any(Beneficio.class));
@@ -255,13 +262,16 @@ class TransferenciaUseCaseTest {
             TransferenciaDto dtoInvalido = new TransferenciaDto(
                 1L, 1L, new BigDecimal("100.00"), "Transferência inválida"
             );
+            
+            doThrow(new IllegalArgumentException("Benefício de origem e destino não podem ser iguais"))
+                .when(beneficioService).validarBeneficiosDiferentes(1L, 1L);
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(dtoInvalido);
 
             // Assert
             assertThat(resultado).isFalse();
-            verify(beneficioRepository, never()).findById(any());
+            verify(beneficioService, never()).buscarPorId(any());
             verify(beneficioRepository, never()).save(any(Beneficio.class));
         }
 

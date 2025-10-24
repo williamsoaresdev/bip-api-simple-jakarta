@@ -76,8 +76,9 @@ public class BeneficioController {
     public Response buscarPorId(@PathParam("id") final Long id) {
         try {
             if (id == null || id <= 0) {
-                return errorResponseBuilder.buildBadRequestError(
-                    new IllegalArgumentException("ID deve ser um número positivo"));
+                final Map<String, Object> erro = new ConcurrentHashMap<>();
+                erro.put("erro", "ID deve ser um número positivo");
+                return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
             }
             
             final Optional<BeneficioDto> beneficio = beneficioUseCase.buscarPorId(id);
@@ -85,8 +86,10 @@ public class BeneficioController {
             if (beneficio.isPresent()) {
                 return errorResponseBuilder.buildSuccessResponse(beneficio.get());
             } else {
-                return errorResponseBuilder.buildNotFoundError(
-                    new IllegalArgumentException("Benefício não encontrado com ID: " + id));
+                final Map<String, Object> erro = new ConcurrentHashMap<>();
+                erro.put("erro", "Benefício não encontrado");
+                erro.put("id", id);
+                return Response.status(Response.Status.NOT_FOUND).entity(erro).build();
             }
             
         } catch (Exception e) {
@@ -101,7 +104,10 @@ public class BeneficioController {
             return Response.status(Response.Status.CREATED).entity(beneficioCriado).build();
                     
         } catch (IllegalArgumentException e) {
-            return errorResponseBuilder.buildBadRequestError(e);
+            final Map<String, Object> erro = new ConcurrentHashMap<>();
+            erro.put("erro", "Dados inválidos");
+            erro.put("detalhes", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
                     
         } catch (Exception e) {
             return errorResponseBuilder.buildInternalServerError(e);
@@ -113,15 +119,19 @@ public class BeneficioController {
     public Response atualizar(@PathParam("id") final Long id, @Valid final AtualizarBeneficioDto dto) {
         try {
             if (id == null || id <= 0) {
-                return errorResponseBuilder.buildBadRequestError(
-                    new IllegalArgumentException("ID deve ser um número positivo"));
+                final Map<String, Object> erro = new ConcurrentHashMap<>();
+                erro.put("erro", "ID deve ser um número positivo");
+                return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
             }
             
             final BeneficioDto beneficioAtualizado = beneficioUseCase.atualizar(id, dto);
             return errorResponseBuilder.buildSuccessResponse(beneficioAtualizado);
                     
         } catch (IllegalArgumentException e) {
-            return errorResponseBuilder.buildBadRequestError(e);
+            final Map<String, Object> erro = new ConcurrentHashMap<>();
+            erro.put("erro", "Dados inválidos");
+            erro.put("detalhes", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
                     
         } catch (Exception e) {
             return errorResponseBuilder.buildInternalServerError(e);
@@ -133,15 +143,22 @@ public class BeneficioController {
     public Response remover(@PathParam("id") final Long id) {
         try {
             if (id == null || id <= 0) {
-                return errorResponseBuilder.buildBadRequestError(
-                    new IllegalArgumentException("ID deve ser um número positivo"));
+                final Map<String, Object> erro = new ConcurrentHashMap<>();
+                erro.put("erro", "ID deve ser um número positivo");
+                return Response.status(Response.Status.BAD_REQUEST).entity(erro).build();
             }
             
             beneficioUseCase.remover(id);
-            return errorResponseBuilder.buildSuccessResponse();
+            final Map<String, Object> sucesso = new ConcurrentHashMap<>();
+            sucesso.put("mensagem", "Benefício removido com sucesso");
+            sucesso.put("id", id);
+            return Response.ok(sucesso).build();
                     
         } catch (IllegalArgumentException e) {
-            return errorResponseBuilder.buildNotFoundError(e);
+            final Map<String, Object> erro = new ConcurrentHashMap<>();
+            erro.put("erro", "Benefício não encontrado");
+            erro.put("detalhes", e.getMessage());
+            return Response.status(Response.Status.NOT_FOUND).entity(erro).build();
                     
         } catch (Exception e) {
             return errorResponseBuilder.buildInternalServerError(e);

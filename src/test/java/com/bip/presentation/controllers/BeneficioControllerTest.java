@@ -73,9 +73,10 @@ class BeneficioControllerTest {
         when(errorResponseBuilder.buildSuccessResponse()).thenReturn(
             Response.ok(Map.of("mensagem", "Operação realizada com sucesso")).build()
         );
-        when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(
-            Response.ok(beneficioDtoValido).build()
-        );
+        when(errorResponseBuilder.buildSuccessResponse(any())).thenAnswer(invocation -> {
+            Object argument = invocation.getArgument(0);
+            return Response.ok(argument).build();
+        });
         when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(
             Response.status(Response.Status.BAD_REQUEST)
                 .entity(Map.of("erro", "Requisição inválida"))
