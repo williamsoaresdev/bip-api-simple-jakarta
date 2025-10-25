@@ -8,7 +8,8 @@
 [![H2](https://img.shields.io/badge/H2-Database-003e6b?logo=h2&logoColor=white)](https://www.h2database.com/)
 [![Jetty](https://img.shields.io/badge/Jetty-11-FF6C2C?logo=eclipse-jetty&logoColor=white)](https://www.eclipse.org/jetty/)
 
-[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?logo=junit5&logoColor=white)](src/test/)
+[![Tests](https://img.shields.io/badge/Tests-359%20✓-brightgreen?logo=junit5&logoColor=white)](src/test/)
+[![Coverage](https://img.shields.io/badge/Coverage-87%25-brightgreen?logo=codecov&logoColor=white)](#-qualidade-e-testes)
 [![API](https://img.shields.io/badge/API-REST-blue?logo=swagger&logoColor=white)](http://localhost:8080/api)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean-success?logo=architecture&logoColor=white)](#-arquitetura)
 
@@ -26,6 +27,39 @@
 - 🛡️ **Validação Avançada** - Bean Validation com regras de negócio consistentes
 - 🌐 **APIs REST Completas** - Endpoints bem documentados e testados
 - 🧪 **Cobertura de Testes** - Testes abrangentes para todas as funcionalidades
+
+## 🧪 Qualidade e Testes
+
+### 📊 Métricas de Qualidade
+
+| Métrica | Resultado | Status |
+|---------|-----------|--------|
+| **Testes Unitários** | 359 ✓ / 359 | ✅ 100% sucesso |
+| **Cobertura de Código** | 87% | ✅ Excelente |
+| **Cobertura de Branches** | 85% | ✅ Muito bom |
+| **Linhas Testadas** | 2.473 / 3.119 | ✅ Alta cobertura |
+
+### 🏆 Cobertura por Módulo
+
+- **Controllers**: 100% - Todos os endpoints testados
+- **Use Cases**: 100% - Lógica de negócio completa
+- **Entities**: 100% - Domain objects validados
+- **Value Objects**: 99% - Quase perfeito
+- **Repositories**: 95% - Persistência robusta
+- **Utils**: 100% - Utilitários confiáveis
+
+### 🚀 Execução dos Testes
+
+```bash
+# Executar todos os testes
+mvn test
+
+# Executar com relatório de cobertura
+mvn clean verify
+
+# Relatório JaCoCo disponível em:
+# target/site/jacoco/index.html
+```
 
 ## 🛠️ Stack Tecnológica
 

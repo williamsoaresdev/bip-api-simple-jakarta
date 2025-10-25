@@ -48,9 +48,10 @@ class TransferenciaControllerTest {
         );
         
         // Configurar mocks do ErrorResponseBuilder
-        when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(
-            Response.ok(Map.of("resultado", "Transferência realizada com sucesso")).build()
-        );
+        when(errorResponseBuilder.buildSuccessResponse(any())).thenAnswer(invocation -> {
+            Object entity = invocation.getArgument(0);
+            return Response.ok(entity).build();
+        });
         
         // Mock para IllegalArgumentException - "Dados inválidos"
         when(errorResponseBuilder.buildBadRequestError(any(IllegalArgumentException.class))).thenAnswer(invocation -> {
@@ -285,7 +286,8 @@ class TransferenciaControllerTest {
             @SuppressWarnings("unchecked")
             Map<String, Object> erro = (Map<String, Object>) response.getEntity();
             
-            assertThat(erro.get("erro")).isEqualTo("Valor deve ser positivo");
+            assertThat(erro.get("erro")).isEqualTo("Dados inválidos");
+            assertThat(erro.get("detalhes")).isEqualTo("Valor deve ser positivo");
             verify(transferenciaUseCase, never()).calcularTaxa(any());
         }
         
@@ -301,7 +303,8 @@ class TransferenciaControllerTest {
             @SuppressWarnings("unchecked")
             Map<String, Object> erro = (Map<String, Object>) response.getEntity();
             
-            assertThat(erro.get("erro")).isEqualTo("Valor deve ser positivo");
+            assertThat(erro.get("erro")).isEqualTo("Dados inválidos");
+            assertThat(erro.get("detalhes")).isEqualTo("Valor deve ser positivo");
             verify(transferenciaUseCase, never()).calcularTaxa(any());
         }
         
@@ -317,7 +320,8 @@ class TransferenciaControllerTest {
             @SuppressWarnings("unchecked")
             Map<String, Object> erro = (Map<String, Object>) response.getEntity();
             
-            assertThat(erro.get("erro")).isEqualTo("Valor deve ser positivo");
+            assertThat(erro.get("erro")).isEqualTo("Dados inválidos");
+            assertThat(erro.get("detalhes")).isEqualTo("Valor deve ser positivo");
             verify(transferenciaUseCase, never()).calcularTaxa(any());
         }
         
