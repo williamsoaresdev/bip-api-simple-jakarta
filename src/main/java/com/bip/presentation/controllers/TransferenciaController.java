@@ -61,6 +61,7 @@ public class TransferenciaController {
             status.put("totalTransferencias", transferenciaUseCase.contarTransferencias());
             status.put("endpoints", List.of(
                 "GET /api/transferencias - Lista histórico de transferências",
+                "GET /api/transferencias/{id} - Busca transferência por ID",
                 "POST /api/transferencias - Executa nova transferência",
                 "POST /api/transferencias/validar - Valida transferência",
                 "GET /api/transferencias/taxa?valor=X - Calcula taxa",
@@ -90,6 +91,40 @@ public class TransferenciaController {
             resultado.put("timestamp", LocalDateTime.now());
             
             return errorResponseBuilder.buildSuccessResponse(resultado);
+            
+        } catch (Exception e) {
+            return errorResponseBuilder.buildInternalServerError(e);
+        }
+    }
+    
+    /**
+     * Busca uma transferência específica por ID.
+     * 
+     * @param id ID da transferência
+     * @return resposta com dados da transferência
+     */
+    @GET
+    @Path("/{id}")
+    public Response buscarPorId(@PathParam("id") Long id) {
+        try {
+            if (id == null || id <= 0) {
+                return errorResponseBuilder.buildBadRequestError(
+                    new IllegalArgumentException("ID deve ser um número positivo"));
+            }
+            
+            HistoricoTransferenciaDto transferencia = transferenciaUseCase.buscarPorId(id);
+            
+            if (transferencia != null) {
+                return errorResponseBuilder.buildSuccessResponse(transferencia);
+            } else {
+                Map<String, Object> erro = new HashMap<>();
+                erro.put("erro", "Transferência não encontrada");
+                erro.put("id", id);
+                return Response.status(Response.Status.NOT_FOUND).entity(erro).build();
+            }
+            
+        } catch (IllegalArgumentException e) {
+            return errorResponseBuilder.buildBadRequestError(e);
             
         } catch (Exception e) {
             return errorResponseBuilder.buildInternalServerError(e);

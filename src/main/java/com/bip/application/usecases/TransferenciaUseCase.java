@@ -125,6 +125,25 @@ public class TransferenciaUseCase {
     }
     
     /**
+     * Busca uma transferência específica por ID (simulação).
+     * 
+     * @param id ID da transferência a ser buscada
+     * @return transferência encontrada ou null se não existir
+     */
+    public HistoricoTransferenciaDto buscarPorId(@NotNull Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID deve ser um número positivo");
+        }
+        
+        // Em um cenário real, isso consultaria o repositório de transferências
+        // Aqui vamos simular buscando na lista de transferências
+        return listarTransferencias().stream()
+                .filter(transferencia -> transferencia.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    /**
      * Conta o total de transferências realizadas (simulação).
      * 
      * @return total de transferências
