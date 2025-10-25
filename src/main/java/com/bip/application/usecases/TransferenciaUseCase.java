@@ -1,5 +1,6 @@
 package com.bip.application.usecases;
 
+import com.bip.application.dtos.HistoricoTransferenciaDto;
 import com.bip.application.dtos.TransferenciaDto;
 import com.bip.application.services.BeneficioService;
 import com.bip.domain.entities.Beneficio;
@@ -10,6 +11,9 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class TransferenciaUseCase {
@@ -56,6 +60,78 @@ public class TransferenciaUseCase {
     public Money calcularTaxa(@NotNull BigDecimal valor) {
         BigDecimal taxa = valor.multiply(new BigDecimal("0.01"));
         return Money.of(taxa);
+    }
+    
+    /**
+     * Lista todas as transferências realizadas (simulação para demonstração).
+     * Em um cenário real, isso consultaria uma tabela de histórico de transferências.
+     * 
+     * @return lista de transferências realizadas
+     */
+    public List<HistoricoTransferenciaDto> listarTransferencias() {
+        // Simulação de dados para demonstração
+        // Em um cenário real, isso consultaria o repositório de transferências
+        List<HistoricoTransferenciaDto> transferencias = new ArrayList<>();
+        
+        // Buscar alguns benefícios para simular transferências
+        List<Beneficio> beneficios = beneficioRepository.findAll();
+        
+        if (beneficios.size() >= 2) {
+            Beneficio origem = beneficios.get(0);
+            Beneficio destino = beneficios.get(1);
+            
+            // Simular algumas transferências de exemplo
+            transferencias.add(new HistoricoTransferenciaDto(
+                1L,
+                origem.getId(),
+                origem.getNome(),
+                destino.getId(), 
+                destino.getNome(),
+                new BigDecimal("100.00"),
+                new BigDecimal("1.00"),
+                "Transferência de exemplo",
+                LocalDateTime.now().minusDays(1),
+                "CONCLUIDA"
+            ));
+            
+            transferencias.add(new HistoricoTransferenciaDto(
+                2L,
+                destino.getId(),
+                destino.getNome(),
+                origem.getId(),
+                origem.getNome(),
+                new BigDecimal("250.00"),
+                new BigDecimal("2.50"),
+                "Transferência de retorno",
+                LocalDateTime.now().minusHours(6),
+                "CONCLUIDA"
+            ));
+            
+            transferencias.add(new HistoricoTransferenciaDto(
+                3L,
+                origem.getId(),
+                origem.getNome(),
+                destino.getId(),
+                destino.getNome(),
+                new BigDecimal("50.00"),
+                new BigDecimal("0.50"),
+                "Transferência recente",
+                LocalDateTime.now().minusMinutes(30),
+                "CONCLUIDA"
+            ));
+        }
+        
+        return transferencias;
+    }
+    
+    /**
+     * Conta o total de transferências realizadas (simulação).
+     * 
+     * @return total de transferências
+     */
+    public Long contarTransferencias() {
+        // Em um cenário real, isso faria um COUNT na tabela de transferências
+        return (long) listarTransferencias().size();
     }
     
     private void validarParametrosTransferencia(TransferenciaDto dto) {

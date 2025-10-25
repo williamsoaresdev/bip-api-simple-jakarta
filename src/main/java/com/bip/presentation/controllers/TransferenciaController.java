@@ -1,5 +1,6 @@
 package com.bip.presentation.controllers;
 
+import com.bip.application.dtos.HistoricoTransferenciaDto;
 import com.bip.application.dtos.TransferenciaDto;
 import com.bip.application.usecases.TransferenciaUseCase;
 import com.bip.presentation.utils.ErrorResponseBuilder;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,9 +20,11 @@ import java.util.Map;
  * 
  * <p>Fornece endpoints para:</p>
  * <ul>
+ *   <li>Listar histórico de transferências</li>
  *   <li>Executar transferências entre benefícios</li>
  *   <li>Validar transferências antes da execução</li>
  *   <li>Calcular taxas de transferência</li>
+ *   <li>Obter estatísticas de transferências</li>
  * </ul>
  * 
  * <p>Todos os endpoints seguem padrões REST e utilizam tratamento
@@ -40,6 +44,57 @@ public class TransferenciaController {
     
     @Inject
     private ErrorResponseBuilder errorResponseBuilder;
+    
+    /**
+     * Retorna o status do módulo de transferências.
+     * 
+     * @return resposta com informações do status
+     */
+    @GET
+    @Path("/status")
+    public Response getStatus() {
+        try {
+            Map<String, Object> status = new HashMap<>();
+            status.put("modulo", "Transferências");
+            status.put("status", "Operacional");
+            status.put("timestamp", LocalDateTime.now());
+            status.put("totalTransferencias", transferenciaUseCase.contarTransferencias());
+            status.put("endpoints", List.of(
+                "GET /api/transferencias - Lista histórico de transferências",
+                "POST /api/transferencias - Executa nova transferência",
+                "POST /api/transferencias/validar - Valida transferência",
+                "GET /api/transferencias/taxa?valor=X - Calcula taxa",
+                "GET /api/transferencias/status - Status do módulo"
+            ));
+            
+            return errorResponseBuilder.buildSuccessResponse(status);
+            
+        } catch (Exception e) {
+            return errorResponseBuilder.buildInternalServerError(e);
+        }
+    }
+    
+    /**
+     * Lista todas as transferências realizadas.
+     * 
+     * @return resposta com lista de transferências
+     */
+    @GET
+    public Response listarTransferencias() {
+        try {
+            List<HistoricoTransferenciaDto> transferencias = transferenciaUseCase.listarTransferencias();
+            
+            Map<String, Object> resultado = new HashMap<>();
+            resultado.put("transferencias", transferencias);
+            resultado.put("total", transferencias.size());
+            resultado.put("timestamp", LocalDateTime.now());
+            
+            return errorResponseBuilder.buildSuccessResponse(resultado);
+            
+        } catch (Exception e) {
+            return errorResponseBuilder.buildInternalServerError(e);
+        }
+    }
     
     /**
      * Executa uma transferência entre dois benefícios.
