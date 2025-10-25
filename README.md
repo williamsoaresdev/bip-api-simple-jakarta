@@ -1,4 +1,4 @@
-# 🏦 BIP API - Sistema de Gestão de Benefícios
+# BIP API - Sistema de Gestão de Benefícios
 
 <div align="center">
 
@@ -8,38 +8,38 @@
 [![H2](https://img.shields.io/badge/H2-Database-003e6b?logo=h2&logoColor=white)](https://www.h2database.com/)
 [![Jetty](https://img.shields.io/badge/Jetty-11-FF6C2C?logo=eclipse-jetty&logoColor=white)](https://www.eclipse.org/jetty/)
 
-[![Tests](https://img.shields.io/badge/Tests-359%20✓-brightgreen?logo=junit5&logoColor=white)](src/test/)
+[![Tests](https://img.shields.io/badge/Tests-359%20-brightgreen?logo=junit5&logoColor=white)](src/test/)
 [![Coverage](https://img.shields.io/badge/Coverage-87%25-brightgreen?logo=codecov&logoColor=white)](#-qualidade-e-testes)
 [![API](https://img.shields.io/badge/API-REST-blue?logo=swagger&logoColor=white)](http://localhost:8080/api)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean-success?logo=architecture&logoColor=white)](#-arquitetura)
 
 </div>
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 **BIP API** é um sistema moderno e robusto para gerenciamento de benefícios corporativos, desenvolvido seguindo os princípios da **Clean Architecture** e utilizando as mais recentes tecnologias **Jakarta EE 10**.
 
-### 🎯 Funcionalidades Principais
+### Funcionalidades Principais
 
-- 💰 **Gestão Completa de Benefícios** - CRUD completo com validações robustas
-- 🔄 **Sistema de Transferências** - Transferências entre benefícios com cálculo de taxas
-- 📊 **Estatísticas e Relatórios** - Insights sobre utilização dos benefícios
-- 🛡️ **Validação Avançada** - Bean Validation com regras de negócio consistentes
-- 🌐 **APIs REST Completas** - Endpoints bem documentados e testados
-- 🧪 **Cobertura de Testes** - Testes abrangentes para todas as funcionalidades
+- **Gestão Completa de Benefícios** - CRUD completo com validações robustas
+- **Sistema de Transferências** - Transferências entre benefícios com cálculo de taxas
+- **Estatísticas e Relatórios** - Insights sobre utilização dos benefícios
+- **Validação Avançada** - Bean Validation com regras de negócio consistentes
+- **APIs REST Completas** - Endpoints bem documentados e testados
+- **Cobertura de Testes** - Testes abrangentes para todas as funcionalidades
 
-## 🧪 Qualidade e Testes
+## Qualidade e Testes
 
-### 📊 Métricas de Qualidade
+### Métricas de Qualidade
 
 | Métrica | Resultado | Status |
 |---------|-----------|--------|
-| **Testes Unitários** | 359 ✓ / 359 | ✅ 100% sucesso |
-| **Cobertura de Código** | 87% | ✅ Excelente |
-| **Cobertura de Branches** | 85% | ✅ Muito bom |
-| **Linhas Testadas** | 2.473 / 3.119 | ✅ Alta cobertura |
+| **Testes Unitários** | 359 / 359 | 100% sucesso |
+| **Cobertura de Código** | 87% | Excelente |
+| **Cobertura de Branches** | 85% | Muito bom |
+| **Linhas Testadas** | 2.473 / 3.119 | Alta cobertura |
 
-### 🏆 Cobertura por Módulo
+### Cobertura por Módulo
 
 - **Controllers**: 100% - Todos os endpoints testados
 - **Use Cases**: 100% - Lógica de negócio completa
@@ -48,7 +48,7 @@
 - **Repositories**: 95% - Persistência robusta
 - **Utils**: 100% - Utilitários confiáveis
 
-### 🚀 Execução dos Testes
+### Execução dos Testes
 
 ```bash
 # Executar todos os testes
@@ -61,9 +61,9 @@ mvn clean verify
 # target/site/jacoco/index.html
 ```
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
-### 🎯 Core Technologies
+### Core Technologies
 | Tecnologia | Versão | Propósito |
 |------------|--------|-----------|
 | **Java** | 17+ | Linguagem principal (LTS) |
@@ -72,7 +72,7 @@ mvn clean verify
 | **H2 Database** | 2.2+ | Banco em memória (dev/test) |
 | **Jetty** | 11.0.18 | Servidor de aplicação |
 
-### 🔧 Jakarta EE Stack
+### Jakarta EE Stack
 | Especificação | Implementação | Versão | Uso |
 |---------------|---------------|--------|-----|
 | **CDI** | Weld | 5.1.2 | Injeção de dependências |
@@ -81,7 +81,7 @@ mvn clean verify
 | **Bean Validation** | Hibernate Validator | 8.0.1 | Validações |
 | **JSON-B** | Eclipse Yasson | 3.0.3 | Serialização JSON |
 
-### 🧪 Ferramentas de Qualidade
+### Ferramentas de Qualidade
 | Ferramenta | Versão | Finalidade |
 |------------|--------|------------|
 | **JUnit** | 5.10.1 | Framework de testes |
@@ -92,71 +92,71 @@ mvn clean verify
 | **PMD** | 6.55.0 | Análise estática |
 | **SpotBugs** | 4.8.1 | Detecção de bugs |
 
-## 🏗️ Arquitetura Clean Architecture
+## Arquitetura Clean Architecture
 
 O projeto implementa **Clean Architecture** com separação clara de responsabilidades:
 
 ```
-� com.bip
-├── 🔵 domain/                 # 🏛️ CAMADA DE DOMÍNIO
-│   ├── entities/             # Entidades de negócio
-│   │   └── Beneficio.java    # Entidade principal
-│   ├── valueobjects/         # Objetos de valor
-│   │   ├── Dinheiro.java     # Representação monetária
-│   │   └── Taxa.java         # Cálculo de taxas
-│   ├── repositories/         # Contratos de persistência
-│   │   └── BeneficioRepository.java
-│   └── services/             # Serviços de domínio
-│       └── BeneficioService.java
+com.bip
+├── domain/ # CAMADA DE DOMÍNIO
+│ ├── entities/ # Entidades de negócio
+│ │ └── Beneficio.java # Entidade principal
+│ ├── valueobjects/ # Objetos de valor
+│ │ ├── Dinheiro.java # Representação monetária
+│ │ └── Taxa.java # Cálculo de taxas
+│ ├── repositories/ # Contratos de persistência
+│ │ └── BeneficioRepository.java
+│ └── services/ # Serviços de domínio
+│ └── BeneficioService.java
 │
-├── 🟢 application/           # 💼 CAMADA DE APLICAÇÃO
-│   ├── dtos/                 # Data Transfer Objects
-│   │   ├── BeneficioDto.java
-│   │   ├── CriarBeneficioDto.java
-│   │   ├── AtualizarBeneficioDto.java
-│   │   └── TransferenciaDto.java
-│   ├── mappers/              # Mapeamento entidade ↔ DTO
-│   │   └── BeneficioMapper.java
-│   ├── services/             # Serviços de aplicação
-│   │   └── BeneficioApplicationService.java
-│   └── usecases/             # Casos de uso
-│       ├── BeneficioUseCase.java
-│       └── TransferenciaUseCase.java
+├── application/ # CAMADA DE APLICAÇÃO
+│ ├── dtos/ # Data Transfer Objects
+│ │ ├── BeneficioDto.java
+│ │ ├── CriarBeneficioDto.java
+│ │ ├── AtualizarBeneficioDto.java
+│ │ └── TransferenciaDto.java
+│ ├── mappers/ # Mapeamento entidade ↔ DTO
+│ │ └── BeneficioMapper.java
+│ ├── services/ # Serviços de aplicação
+│ │ └── BeneficioApplicationService.java
+│ └── usecases/ # Casos de uso
+│ ├── BeneficioUseCase.java
+│ └── TransferenciaUseCase.java
 │
-├── 🟡 infrastructure/        # 🔧 CAMADA DE INFRAESTRUTURA
-│   ├── configuration/        # Configurações CDI/JAX-RS
-│   │   ├── EntityManagerProducer.java
-│   │   └── JaxRsConfiguration.java
-│   └── persistence/          # Implementações JPA
-│       └── BeneficioRepositoryImpl.java
+├── infrastructure/ # CAMADA DE INFRAESTRUTURA
+│ ├── configuration/ # Configurações CDI/JAX-RS
+│ │ ├── EntityManagerProducer.java
+│ │ └── JaxRsConfiguration.java
+│ └── persistence/ # Implementações JPA
+│ └── BeneficioRepositoryImpl.java
 │
-└── 🔴 presentation/          # 🌐 CAMADA DE APRESENTAÇÃO
-    ├── controllers/          # Controllers REST
-    │   ├── BeneficioController.java
-    │   └── TransferenciaController.java
-    ├── handlers/             # Exception Handlers
-    │   └── GlobalExceptionHandler.java
-    └── utils/                # Utilitários de apresentação
-        └── ErrorResponseBuilder.java
+└── presentation/ # CAMADA DE APRESENTAÇÃO
+├── controllers/ # Controllers REST
+│ ├── BeneficioController.java
+│ └── TransferenciaController.java
+├── handlers/ # Exception Handlers
+│ └── GlobalExceptionHandler.java
+└── utils/ # Utilitários de apresentação
+└── ErrorResponseBuilder.java
 ```
 
-### 📐 Princípios Arquiteturais
+### Princípios Arquiteturais
 
-- **🎯 Dependency Inversion**: Dependências apontam para abstrações
-- **🔒 Single Responsibility**: Cada classe tem uma única responsabilidade
-- **🔗 Dependency Injection**: CDI gerencia todas as dependências
-- **🧪 Testability**: Todas as camadas são facilmente testáveis
-- **🔄 Separation of Concerns**: Separação clara entre camadas
+- ** Dependency Inversion**: Dependências apontam para abstrações
+- ** Single Responsibility**: Cada classe tem uma única responsabilidade
+- ** Dependency Injection**: CDI gerencia todas as dependências
+- ** Testability**: Todas as camadas são facilmente testáveis
+- ** Separation of Concerns**: Separação clara entre camadas
 
-## 🚀 Quick Start
+## Quick Start
 
-### 📋 Pré-requisitos
+### Pré-requisitos
 
-- ☕ **Java 17+** (OpenJDK ou Oracle)
-- 📦 **Maven 3.9+**
-- 🌐 **Git** (para clonar o repositório)
+- **Java 17+** (OpenJDK ou Oracle)
+- **Maven 3.9+**
+- **Git** (para clonar o repositório)
 
-### 1️⃣ Clonar e Configurar
+### 1⃣ Clonar e Configurar
 
 ```bash
 # Clonar repositório
@@ -164,11 +164,11 @@ git clone https://github.com/williamsoaresdev/bip-api-simple-jakarta.git
 cd bip-api-simple-jakarta
 
 # Verificar pré-requisitos
-java --version    # Deve mostrar Java 17+
-mvn --version     # Deve mostrar Maven 3.9+
+java --version # Deve mostrar Java 17+
+mvn --version # Deve mostrar Maven 3.9+
 ```
 
-### 2️⃣ Compilar e Testar
+### 2⃣ Compilar e Testar
 
 ```bash
 # Compilar projeto
@@ -181,7 +181,7 @@ mvn test
 mvn clean verify
 ```
 
-### 3️⃣ Iniciar Aplicação
+### 3⃣ Iniciar Aplicação
 
 ```bash
 # Iniciar servidor Jetty
@@ -191,7 +191,7 @@ mvn jetty:run
 # Aplicação estará disponível em: http://localhost:8080
 ```
 
-### 4️⃣ Verificar Funcionamento
+### 4⃣ Verificar Funcionamento
 
 ```bash
 # Testar API status
@@ -201,21 +201,21 @@ curl http://localhost:8080/api/beneficios/status
 # http://localhost:8080/api/beneficios/status
 ```
 
-### 5️⃣ Parar Aplicação
+### 5⃣ Parar Aplicação
 
 ```bash
 # No terminal onde está executando:
 Ctrl + C
 ```
 
-## 📡 Documentação da API
+## Documentação da API
 
-### 🏠 Base URL
+### Base URL
 ```
 http://localhost:8080/api
 ```
 
-### 📊 Status e Saúde
+### Status e Saúde
 
 #### Status da Aplicação
 ```http
@@ -224,30 +224,30 @@ GET /beneficios/status
 **Resposta**: Informações da aplicação, versão e endpoints disponíveis
 
 <details>
-<summary>📄 Exemplo de Resposta</summary>
+<summary> Exemplo de Resposta</summary>
 
 ```json
 {
-  "status": "API funcionando",
-  "timestamp": "2025-10-24T12:30:00",
-  "message": "Clean Architecture implementada com sucesso",
-  "version": "3.0.0-Clean-Architecture",
-  "endpoints": [
-    "GET /api/beneficios - Lista todos os benefícios",
-    "POST /api/beneficios - Cria novo benefício",
-    "GET /api/beneficios/{id} - Busca benefício por ID",
-    "PUT /api/beneficios/{id} - Atualiza benefício",
-    "DELETE /api/beneficios/{id} - Remove benefício",
-    "GET /api/beneficios/ativos - Lista benefícios ativos",
-    "GET /api/beneficios/estatisticas - Estatísticas dos benefícios"
-  ]
+"status": "API funcionando",
+"timestamp": "2025-10-24T12:30:00",
+"message": "Clean Architecture implementada com sucesso",
+"version": "3.0.0-Clean-Architecture",
+"endpoints": [
+"GET /api/beneficios - Lista todos os benefícios",
+"POST /api/beneficios - Cria novo benefício",
+"GET /api/beneficios/{id} - Busca benefício por ID",
+"PUT /api/beneficios/{id} - Atualiza benefício",
+"DELETE /api/beneficios/{id} - Remove benefício",
+"GET /api/beneficios/ativos - Lista benefícios ativos",
+"GET /api/beneficios/estatisticas - Estatísticas dos benefícios"
+]
 }
 ```
 </details>
 
 ---
 
-### � Gerenciamento de Benefícios
+### Gerenciamento de Benefícios
 
 #### Listar Todos os Benefícios
 ```http
@@ -270,14 +270,14 @@ POST /beneficios
 Content-Type: application/json
 
 {
-  "nome": "Vale Alimentação",
-  "descricao": "Benefício para compra de alimentos",
-  "valorInicial": 500.00
+"nome": "Vale Alimentação",
+"descricao": "Benefício para compra de alimentos",
+"valorInicial": 500.00
 }
 ```
 
 <details>
-<summary>📋 Validações</summary>
+<summary> Validações</summary>
 
 - **nome**: 3-100 caracteres (obrigatório)
 - **descricao**: até 500 caracteres
@@ -290,9 +290,9 @@ PUT /beneficios/{id}
 Content-Type: application/json
 
 {
-  "nome": "Vale Alimentação Premium",
-  "descricao": "Benefício premium para alimentação",
-  "valorInicial": 750.00
+"nome": "Vale Alimentação Premium",
+"descricao": "Benefício premium para alimentação",
+"valorInicial": 750.00
 }
 ```
 
@@ -307,20 +307,20 @@ GET /beneficios/estatisticas
 ```
 
 <details>
-<summary>📄 Exemplo de Resposta</summary>
+<summary> Exemplo de Resposta</summary>
 
 ```json
 {
-  "totalBeneficiosAtivos": 5,
-  "somaTotalValores": 2500.00,
-  "timestamp": "2025-10-24T12:30:00"
+"totalBeneficiosAtivos": 5,
+"somaTotalValores": 2500.00,
+"timestamp": "2025-10-24T12:30:00"
 }
 ```
 </details>
 
 ---
 
-### � Sistema de Transferências
+### Sistema de Transferências
 
 #### Executar Transferência
 ```http
@@ -328,15 +328,15 @@ POST /transferencias
 Content-Type: application/json
 
 {
-  "beneficioOrigemId": 1,
-  "beneficioDestinoId": 2,
-  "valor": 100.00,
-  "descricao": "Transferência entre benefícios"
+"beneficioOrigemId": 1,
+"beneficioDestinoId": 2,
+"valor": 100.00,
+"descricao": "Transferência entre benefícios"
 }
 ```
 
 <details>
-<summary>📋 Regras de Negócio</summary>
+<summary> Regras de Negócio</summary>
 
 - Benefícios origem e destino devem ser diferentes
 - Saldo suficiente no benefício origem
@@ -351,9 +351,9 @@ POST /transferencias/validar
 Content-Type: application/json
 
 {
-  "beneficioOrigemId": 1,
-  "beneficioDestinoId": 2,
-  "valor": 100.00
+"beneficioOrigemId": 1,
+"beneficioDestinoId": 2,
+"valor": 100.00
 }
 ```
 
@@ -363,26 +363,26 @@ GET /transferencias/taxa?valor=100.00
 ```
 
 <details>
-<summary>📄 Exemplo de Resposta</summary>
+<summary> Exemplo de Resposta</summary>
 
 ```json
 {
-  "valorOriginal": 100.00,
-  "taxa": 2.00,
-  "valorComTaxa": 102.00
+"valorOriginal": 100.00,
+"taxa": 2.00,
+"valorComTaxa": 102.00
 }
 ```
 </details>
 
-## 🧪 Testando a API
+## Testando a API
 
-### 🔗 Coleções Postman
+### Coleções Postman
 
 O projeto inclui coleções completas do Postman:
 
-- **📁 BIP-API-Collection.postman_collection.json** - Coleção principal
-- **🌍 BIP-API-Development.postman_environment.json** - Environment de desenvolvimento
-- **📖 POSTMAN-COLLECTIONS.md** - Documentação completa
+- ** BIP-API-Collection.postman_collection.json** - Coleção principal
+- ** BIP-API-Development.postman_environment.json** - Environment de desenvolvimento
+- ** POSTMAN-COLLECTIONS.md** - Documentação completa
 
 #### Importar no Postman:
 1. Abra o Postman
@@ -390,7 +390,7 @@ O projeto inclui coleções completas do Postman:
 3. Selecione o environment "BIP API - Development"
 4. Execute os requests!
 
-### 💻 Scripts de Teste
+### Scripts de Teste
 
 #### Para Linux/macOS:
 ```bash
@@ -407,10 +407,10 @@ O projeto inclui coleções completas do Postman:
 scripts\test-api.bat
 ```
 
-### 🚀 Exemplos com cURL
+### Exemplos com cURL
 
 <details>
-<summary>📝 Exemplos Básicos</summary>
+<summary> Exemplos Básicos</summary>
 
 ```bash
 # Verificar status
@@ -421,28 +421,28 @@ curl http://localhost:8080/api/beneficios
 
 # Criar benefício
 curl -X POST "http://localhost:8080/api/beneficios" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "nome": "Vale Transporte",
-       "descricao": "Benefício para transporte público",
-       "valorInicial": 300.00
-     }'
+-H "Content-Type: application/json" \
+-d '{
+"nome": "Vale Transporte",
+"descricao": "Benefício para transporte público",
+"valorInicial": 300.00
+}'
 
 # Executar transferência
 curl -X POST "http://localhost:8080/api/transferencias" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "beneficioOrigemId": 1,
-       "beneficioDestinoId": 2,
-       "valor": 50.00,
-       "descricao": "Transferência de teste"
-     }'
+-H "Content-Type: application/json" \
+-d '{
+"beneficioOrigemId": 1,
+"beneficioDestinoId": 2,
+"valor": 50.00,
+"descricao": "Transferência de teste"
+}'
 ```
 </details>
 
-## 🧪 Testes e Qualidade
+## Testes e Qualidade
 
-### 🎯 Cobertura de Testes
+### Cobertura de Testes
 
 ```bash
 # Executar todos os testes
@@ -455,7 +455,7 @@ mvn clean test jacoco:report
 open target/site/jacoco/index.html
 ```
 
-### 📊 Relatórios de Qualidade
+### Relatórios de Qualidade
 
 ```bash
 # Análise completa de qualidade
@@ -468,20 +468,20 @@ mvn clean verify
 # - target/site/spotbugs.html (SpotBugs)
 ```
 
-### 🏆 Métricas Atuais
+### Métricas Atuais
 
 | Métrica | Valor | Status |
 |---------|-------|--------|
-| **Testes** | Todos passando | ✅ |
-| **Cobertura** | Alta cobertura | ✅ |
-| **Checkstyle** | 0 violações críticas | ✅ |
-| **PMD** | Violações menores | ⚠️ |
-| **SpotBugs** | Sem bugs detectados | ✅ |
-| **Build** | Passing | ✅ |
+| **Testes** | Todos passando | |
+| **Cobertura** | Alta cobertura | |
+| **Checkstyle** | 0 violações críticas | |
+| **PMD** | Violações menores | |
+| **SpotBugs** | Sem bugs detectados | |
+| **Build** | Passing | |
 
-## 🔧 Configuração e Customização
+## Configuração e Customização
 
-### 🌍 Profiles do Maven
+### Profiles do Maven
 
 ```bash
 # Desenvolvimento (padrão)
@@ -494,7 +494,7 @@ mvn clean package -Pprod
 mvn clean verify -Pquality
 ```
 
-### 🗄️ Configuração de Banco
+### Configuração de Banco
 
 #### H2 (Desenvolvimento - Padrão)
 ```properties
@@ -513,36 +513,36 @@ mvn clean verify -Pquality
 <property name="jakarta.persistence.jdbc.password" value="sua_senha"/>
 ```
 
-### ⚙️ Configurações de Performance
+### Configurações de Performance
 
 ```xml
 <!-- pom.xml - Jetty Configuration -->
 <plugin>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-maven-plugin</artifactId>
-    <configuration>
-        <httpConnector>
-            <port>8080</port>
-            <idleTimeout>60000</idleTimeout>
-        </httpConnector>
-        <webApp>
-            <contextPath>/</contextPath>
-        </webApp>
-    </configuration>
+<groupId>org.eclipse.jetty</groupId>
+<artifactId>jetty-maven-plugin</artifactId>
+<configuration>
+<httpConnector>
+<port>8080</port>
+<idleTimeout>60000</idleTimeout>
+</httpConnector>
+<webApp>
+<contextPath>/</contextPath>
+</webApp>
+</configuration>
 </plugin>
 ```
 
-## 🚦 Troubleshooting
+## Troubleshooting
 
-### ❗ Problemas Comuns
+### Problemas Comuns
 
 <details>
-<summary>🔧 Porta 8080 já em uso</summary>
+<summary> Porta 8080 já em uso</summary>
 
 ```bash
 # Verificar quem está usando a porta
-netstat -tulpn | grep :8080  # Linux/Mac
-netstat -ano | findstr :8080  # Windows
+netstat -tulpn | grep :8080 # Linux/Mac
+netstat -ano | findstr :8080 # Windows
 
 # Usar porta diferente
 mvn jetty:run -Djetty.http.port=8081
@@ -550,7 +550,7 @@ mvn jetty:run -Djetty.http.port=8081
 </details>
 
 <details>
-<summary>☕ Versão do Java incorreta</summary>
+<summary> Versão do Java incorreta</summary>
 
 ```bash
 # Verificar versão
@@ -568,7 +568,7 @@ set JAVA_HOME=C:\path\to\java17
 </details>
 
 <details>
-<summary>🧪 Testes falhando</summary>
+<summary> Testes falhando</summary>
 
 ```bash
 # Limpar e recompilar
@@ -583,7 +583,7 @@ mvn test -Dmaven.surefire.debug
 </details>
 
 <details>
-<summary>💾 Problemas de banco de dados</summary>
+<summary> Problemas de banco de dados</summary>
 
 ```bash
 # Limpar dados H2 (reiniciar com banco limpo)
@@ -594,27 +594,27 @@ mvn jetty:run -Dhibernate.show_sql=true
 ```
 </details>
 
-## 📚 Recursos Adicionais
+## Recursos Adicionais
 
-### 📖 Documentação
+### Documentação
 
-- **[📁 Coleções Postman](POSTMAN-COLLECTIONS.md)** - Guia completo das coleções
-- **[🧪 Scripts de Teste](scripts/test-api.sh)** - Testes automatizados via cURL
-- **[🔧 Scripts PowerShell](scripts/test-api.ps1)** - Testes para Windows  
-- **[📊 Scripts Batch](scripts/test-api.bat)** - Testes básicos Windows
-- **[� Scripts de Qualidade](scripts/quality-check.sh)** - Análise de qualidade completa
-- **[�📐 Documentação Arquitetura](docs/ARCHITECTURE.md)** - Clean Architecture
-- **[📖 API Reference](docs/API-REFERENCE.md)** - Documentação completa da API
-- **[🚀 Guia de Deployment](docs/DEPLOYMENT.md)** - Docker, K8s, Cloud
-- **[🔧 Postman Collections](postman/)** - Testes e validação automática
-- **[⚙️ Configurações de Qualidade](config/quality/)** - CheckStyle, PMD, SpotBugs### 🔗 Links Úteis
+- **[ Coleções Postman](POSTMAN-COLLECTIONS.md)** - Guia completo das coleções
+- **[ Scripts de Teste](scripts/test-api.sh)** - Testes automatizados via cURL
+- **[ Scripts PowerShell](scripts/test-api.ps1)** - Testes para Windows 
+- **[ Scripts Batch](scripts/test-api.bat)** - Testes básicos Windows
+- **[ Scripts de Qualidade](scripts/quality-check.sh)** - Análise de qualidade completa
+- **[ Documentação Arquitetura](docs/ARCHITECTURE.md)** - Clean Architecture
+- **[ API Reference](docs/API-REFERENCE.md)** - Documentação completa da API
+- **[ Guia de Deployment](docs/DEPLOYMENT.md)** - Docker, K8s, Cloud
+- **[ Postman Collections](postman/)** - Testes e validação automática
+- **[ Configurações de Qualidade](config/quality/)** - CheckStyle, PMD, SpotBugs### Links Úteis
 
 - **[Jakarta EE 10](https://jakarta.ee/)** - Documentação oficial
 - **[Hibernate ORM](https://hibernate.org/orm/)** - Guia do Hibernate
 - **[Eclipse Jetty](https://www.eclipse.org/jetty/)** - Documentação do Jetty
 - **[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)** - Artigo original
 
-### 🤝 Contribuição
+### Contribuição
 
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/amazing-feature`)
@@ -622,13 +622,13 @@ mvn jetty:run -Dhibernate.show_sql=true
 4. Push para a branch (`git push origin feature/amazing-feature`)
 5. Abra um Pull Request
 
-### 📞 Suporte
+### Suporte
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/williamsoaresdev/bip-api-simple-jakarta/issues)
-- 📧 **Email**: suporte@bip-api.com
-- 💬 **Discussões**: [GitHub Discussions](https://github.com/williamsoaresdev/bip-api-simple-jakarta/discussions)
+- **Issues**: [GitHub Issues](https://github.com/williamsoaresdev/bip-api-simple-jakarta/issues)
+- **Email**: suporte@bip-api.com
+- **Discussões**: [GitHub Discussions](https://github.com/williamsoaresdev/bip-api-simple-jakarta/discussions)
 
-## 📄 Licença
+## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
@@ -636,9 +636,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 <div align="center">
 
-**🏗️ Desenvolvido com Clean Architecture + Jakarta EE 10**
+** Desenvolvido com Clean Architecture + Jakarta EE 10**
 
-[![Made with ❤️](https://img.shields.io/badge/Made%20with-❤️-red.svg)](https://github.com/williamsoaresdev)
+[![Made with ](https://img.shields.io/badge/Made%20with--red.svg)](https://github.com/williamsoaresdev)
 [![Powered by Jakarta EE](https://img.shields.io/badge/Powered%20by-Jakarta%20EE-blue.svg)](https://jakarta.ee/)
 
 </div>
