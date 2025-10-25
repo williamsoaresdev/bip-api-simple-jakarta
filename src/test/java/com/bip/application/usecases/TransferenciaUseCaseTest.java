@@ -21,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -294,8 +296,7 @@ class TransferenciaUseCaseTest {
         void deveRetornarFalseQuandoBeneficioInativo() {
             // Arrange
             beneficioOrigem.desativar();
-            when(beneficioService.buscarPorId(1L)).thenReturn(beneficioOrigem);
-            when(beneficioService.buscarPorId(2L)).thenReturn(beneficioDestino);
+            when(beneficioRepository.findAll()).thenReturn(Arrays.asList(beneficioOrigem, beneficioDestino));
 
             // Act
             boolean resultado = transferenciaUseCase.validarTransferencia(transferenciaDto);
@@ -419,6 +420,157 @@ class TransferenciaUseCaseTest {
             assertThat(beneficiosSalvos).hasSize(2);
             assertThat(beneficiosSalvos.get(0)).isEqualTo(beneficioOrigem);
             assertThat(beneficiosSalvos.get(1)).isEqualTo(beneficioDestino);
+        }
+    }
+    
+    @Nested
+    @DisplayName("Buscar Transferência por ID")
+    class BuscarPorIdTests {
+        
+        @Test
+        @DisplayName("Deve retornar transferência quando ID for encontrado")
+        void deveRetornarTransferenciaQuandoIdEncontrado() {
+            // Arrange
+            Long id = 1L;
+            
+            // Mock dos benefícios usando reflection para definir ID
+            Beneficio beneficioOrigem = new Beneficio(
+                "Benefício Origem",
+                "Descrição origem", 
+                Money.of(BigDecimal.valueOf(1000))
+            );
+            
+            Beneficio beneficioDestino = new Beneficio(
+                "Benefício Destino",
+                "Descrição destino",
+                Money.of(BigDecimal.valueOf(500))
+            );
+            
+            try {
+                java.lang.reflect.Field fieldOrigem = Beneficio.class.getDeclaredField("id");
+                fieldOrigem.setAccessible(true);
+                fieldOrigem.set(beneficioOrigem, 1L);
+                
+                java.lang.reflect.Field fieldDestino = Beneficio.class.getDeclaredField("id");
+                fieldDestino.setAccessible(true);
+                fieldDestino.set(beneficioDestino, 2L);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            
+            // Mock do repository para retornar os benefícios
+            when(beneficioRepository.findAll()).thenReturn(Arrays.asList(beneficioOrigem, beneficioDestino));
+            
+            // Act
+            var resultado = transferenciaUseCase.buscarPorId(id);
+            
+            // Assert
+            assertThat(resultado).isNotNull();
+            assertThat(resultado.getId()).isEqualTo(1L);
+            assertThat(resultado.getBeneficioOrigemNome()).isEqualTo("Benefício Origem");
+            assertThat(resultado.getBeneficioDestinoNome()).isEqualTo("Benefício Destino");
+            
+            verify(beneficioRepository).findAll();
+        }        @Test
+        @DisplayName("Deve retornar null quando ID não for encontrado")
+        void deveRetornarNullQuandoIdNaoEncontrado() {
+            // Arrange
+            Long id = 999L;
+            
+            // Mock dos benefícios usando reflection para definir ID
+            Beneficio beneficioOrigem = new Beneficio(
+                "Benefício Origem",
+                "Descrição origem", 
+                Money.of(BigDecimal.valueOf(1000))
+            );
+            
+            Beneficio beneficioDestino = new Beneficio(
+                "Benefício Destino",
+                "Descrição destino",
+                Money.of(BigDecimal.valueOf(500))
+            );
+            
+            try {
+                java.lang.reflect.Field fieldOrigem = Beneficio.class.getDeclaredField("id");
+                fieldOrigem.setAccessible(true);
+                fieldOrigem.set(beneficioOrigem, 1L);
+                
+                java.lang.reflect.Field fieldDestino = Beneficio.class.getDeclaredField("id");
+                fieldDestino.setAccessible(true);
+                fieldDestino.set(beneficioDestino, 2L);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            
+            // Mock do repository para retornar os benefícios
+            when(beneficioRepository.findAll()).thenReturn(Arrays.asList(beneficioOrigem, beneficioDestino));
+            
+            // Act
+            var resultado = transferenciaUseCase.buscarPorId(id);
+            
+            // Assert
+            assertThat(resultado).isNull();
+            verify(beneficioRepository).findAll();
+        }
+        
+        @Test
+        @DisplayName("Deve lançar exceção quando ID for nulo")
+        void deveLancarExcecaoQuandoIdNulo() {
+            // Arrange
+            Long id = null;
+            
+            // Act & Assert
+            assertThatThrownBy(() -> transferenciaUseCase.buscarPorId(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("ID deve ser um número positivo");
+            
+            verifyNoInteractions(beneficioService);
+        }
+        
+        @Test
+        @DisplayName("Deve lançar exceção quando ID for negativo")
+        void deveLancarExcecaoQuandoIdNegativo() {
+            // Arrange
+            Long id = -1L;
+            
+            // Act & Assert
+            assertThatThrownBy(() -> transferenciaUseCase.buscarPorId(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("ID deve ser um número positivo");
+            
+            verifyNoInteractions(beneficioService);
+        }
+        
+        @Test
+        @DisplayName("Deve lançar exceção quando ID for zero")
+        void deveLancarExcecaoQuandoIdZero() {
+            // Arrange
+            Long id = 0L;
+            
+            // Act & Assert
+            assertThatThrownBy(() -> transferenciaUseCase.buscarPorId(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("ID deve ser um número positivo");
+            
+            verifyNoInteractions(beneficioService);
+        }
+        
+        @Test
+        @DisplayName("Deve propagar exceção quando serviço falha")
+        void devePropagarExcecaoQuandoServicoFalha() {
+            // Arrange
+            Long id = 1L;
+            
+            // Mock o repository para lançar exceção
+            when(beneficioRepository.findAll())
+                .thenThrow(new RuntimeException("Erro ao acessar benefícios"));
+            
+            // Act & Assert
+            assertThatThrownBy(() -> transferenciaUseCase.buscarPorId(id))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Erro ao acessar benefícios");
+            
+            verify(beneficioRepository).findAll();
         }
     }
 }

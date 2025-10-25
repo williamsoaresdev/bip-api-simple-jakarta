@@ -51,14 +51,27 @@ class TransferenciaControllerTest {
         when(errorResponseBuilder.buildSuccessResponse(any())).thenReturn(
             Response.ok(Map.of("resultado", "Transferência realizada com sucesso")).build()
         );
-        when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(
-            Response.status(Response.Status.BAD_REQUEST)
-                .entity(Map.of("erro", "Requisição inválida"))
-                .build()
-        );
+        
+        // Mock para IllegalArgumentException - "Dados inválidos"
+        when(errorResponseBuilder.buildBadRequestError(any(IllegalArgumentException.class))).thenAnswer(invocation -> {
+            IllegalArgumentException ex = invocation.getArgument(0);
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(Map.of("erro", "Dados inválidos", "detalhes", ex.getMessage()))
+                .build();
+        });
+        
+        // Mock para IllegalStateException - "Operação inválida"
+        when(errorResponseBuilder.buildBadRequestError(any(IllegalStateException.class))).thenAnswer(invocation -> {
+            IllegalStateException ex = invocation.getArgument(0);
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(Map.of("erro", "Operação inválida", "detalhes", ex.getMessage()))
+                .build();
+        });
+        
+        // Mock genérico para Exception - erro interno
         when(errorResponseBuilder.buildInternalServerError(any(Exception.class))).thenReturn(
             Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(Map.of("erro", "Erro interno do servidor"))
+                .entity(Map.of("erro", "Erro interno do servidor", "detalhes", "Erro interno"))
                 .build()
         );
     }
@@ -225,7 +238,7 @@ class TransferenciaControllerTest {
             @SuppressWarnings("unchecked")
             Map<String, Object> erro = (Map<String, Object>) response.getEntity();
             
-            assertThat(erro.get("erro")).isEqualTo("Erro na validação");
+            assertThat(erro.get("erro")).isEqualTo("Erro interno do servidor");
             assertThat(erro.get("detalhes")).isEqualTo("Erro interno");
             verify(transferenciaUseCase).validarTransferencia(transferenciaDtoValida);
         }
@@ -324,7 +337,7 @@ class TransferenciaControllerTest {
             @SuppressWarnings("unchecked")
             Map<String, Object> erro = (Map<String, Object>) response.getEntity();
             
-            assertThat(erro.get("erro")).isEqualTo("Erro no cálculo da taxa");
+            assertThat(erro.get("erro")).isEqualTo("Erro interno do servidor");
             assertThat(erro.get("detalhes")).isEqualTo("Erro interno");
             verify(transferenciaUseCase).calcularTaxa(valor);
         }

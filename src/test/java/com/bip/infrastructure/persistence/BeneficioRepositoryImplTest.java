@@ -404,8 +404,12 @@ class BeneficioRepositoryImplTest {
 
         @Test
         @DisplayName("Deve fazer merge de benefício existente")
-        void shouldMergeExistingBeneficio() {
-            // Arrange
+        void shouldMergeExistingBeneficio() throws Exception {
+            // Arrange - definir ID para simular benefício existente
+            java.lang.reflect.Field idField = Beneficio.class.getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(beneficioExistente, 1L);
+            
             when(entityManager.merge(beneficioExistente)).thenReturn(beneficioExistente);
             doNothing().when(transaction).begin();
             doNothing().when(transaction).commit();
@@ -434,7 +438,7 @@ class BeneficioRepositoryImplTest {
         @DisplayName("Deve fazer rollback em caso de erro")
         void shouldRollbackOnError() {
             // Arrange
-            when(transaction.isActive()).thenReturn(true);
+            when(transaction.isActive()).thenReturn(false, true); // primeiro false, depois true após begin
             doNothing().when(transaction).begin();
             doThrow(new RuntimeException("Erro no banco")).when(entityManager).persist(novoBeneficio);
             doNothing().when(transaction).rollback();
@@ -522,7 +526,7 @@ class BeneficioRepositoryImplTest {
         void shouldRollbackOnError() {
             // Arrange
             when(entityManager.contains(beneficioExistente)).thenReturn(true);
-            when(transaction.isActive()).thenReturn(true);
+            when(transaction.isActive()).thenReturn(false, true); // primeiro false, depois true após begin
             doNothing().when(transaction).begin();
             doThrow(new RuntimeException("Erro no banco")).when(entityManager).remove(beneficioExistente);
             doNothing().when(transaction).rollback();

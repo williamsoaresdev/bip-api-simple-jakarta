@@ -239,7 +239,7 @@ public class Beneficio implements Serializable {
     }
     
     public Money getSaldo() {
-        return saldo;
+        return saldo != null ? saldo : Money.zero();
     }
     
     public Boolean getAtivo() {

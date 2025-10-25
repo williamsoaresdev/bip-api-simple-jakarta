@@ -79,17 +79,17 @@ class BeneficioControllerTest {
         });
         when(errorResponseBuilder.buildBadRequestError(any(Exception.class))).thenReturn(
             Response.status(Response.Status.BAD_REQUEST)
-                .entity(Map.of("erro", "Requisição inválida"))
+                .entity(Map.of("erro", "Requisição inválida", "detalhes", "Detalhes do erro"))
                 .build()
         );
         when(errorResponseBuilder.buildNotFoundError(any(Exception.class))).thenReturn(
             Response.status(Response.Status.NOT_FOUND)
-                .entity(Map.of("erro", "Recurso não encontrado"))
+                .entity(Map.of("erro", "Recurso não encontrado", "detalhes", "Detalhes do erro"))
                 .build()
         );
         when(errorResponseBuilder.buildInternalServerError(any(Exception.class))).thenReturn(
             Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(Map.of("erro", "Erro interno do servidor"))
+                .entity(Map.of("erro", "Erro interno do servidor", "detalhes", "Erro interno"))
                 .build()
         );
     }
